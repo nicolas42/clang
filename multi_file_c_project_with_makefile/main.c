@@ -13,4 +13,6 @@ int main(int argc, char **argv)
 }
 
 
+// Notes from Dr Brian Fraser
+// Multi-file C Program with Makefile in Eclipse https://www.youtube.com/watch?v=JkuydQlN2nE
 // Every time you update a .h file you may have to do a make clean
