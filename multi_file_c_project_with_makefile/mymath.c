@@ -1,12 +1,12 @@
-int timesTwo(int n) {
+int mymath_timesTwo(int n) {
 	return n * 2;
 }
 
-int square(int n) {
+int mymath_square(int n) {
 	return n * n;
 }
 
-char* evenOddMessage(int n) {
+char* mymath_evenOddMessage(int n) {
 	if (n % 2 == 0) {
 		return "Even";
 	} else {

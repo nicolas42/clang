@@ -2,10 +2,10 @@
 #ifndef MYMATH_H
 #define MYMATH_H
 
-#define PI 3.14159
+#define MYMATH_PI 3.14159
 
-int timesTwo(int n);
-int square(int n);
-char* evenOddMessage(int n);
+int mymath_timesTwo(int n);
+int mymath_square(int n);
+char* mymath_evenOddMessage(int n);
 
 #endif
