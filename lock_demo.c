@@ -1,8 +1,17 @@
-// Get a number of threads to each add 1 to a number
+// gcc lock_demo.c && ./a.out 1000
+// This script has a lot of threads modifying a single global
+// It can be configured to lock the modify using
+	// #define FUNCTION add1
+	// #define FUNCTION add1_locked
+
+// Demo
+// gcc lock_demo.c && ./a.out 1000
+// launches 1000 threads
+
 // You might have to try it multiple times to see that 
 // the result doesn't always equal the number of threads
 //
-// gcc lock_demo.c && ./a.out 1000
+
 
 #include <stdio.h>
 #include <stdlib.h>

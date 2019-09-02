@@ -1,2 +1,6 @@
 # video-tutorial-code
-Source code to video tutorials.
+
+stuff stolen from Dr Brian Fraser
+
+Function Pointer syntax
+<retval> (*<function_pointer_name>)(<args>);
