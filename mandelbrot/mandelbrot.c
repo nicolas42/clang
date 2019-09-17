@@ -10,6 +10,7 @@ int main(int argc, char** argv){
 
     static unsigned char black[4] = {0, 0, 0, 255};
     static unsigned char white[4] = {255, 255, 255, 255};
+    char color[4] = {255, 255, 255, 255};
 
     int x;
     int y;
@@ -46,14 +47,6 @@ int main(int argc, char** argv){
 	FILE *fp = fopen(filename, "wb"); /* b - binary mode */
 	(void) fprintf(fp, "P6\n%d %d\n255\n", WIDTH, HEIGHT);
 
-    // Make Black Image
-    for (i = 0; i < data_length; i += STRIDE) {
-		data[i + 0] = black[0];
-		data[i + 1] = black[1];
-		data[i + 2] = black[2];
-		// data[i + 3] = black[3];
-    }
-
     // Work out the other pixels
     for (y = 0; y < HEIGHT; y += 1) {
         for (x = 0; x < WIDTH; x += 1) {
@@ -63,8 +56,8 @@ int main(int argc, char** argv){
             cy = y / yscale - ymax;
             zx = 0;
             zy = 0;
-
             isInSet = 1;
+
             for(i = 1; i <= IMAX; i += 1){
                 zxtemp = zx * zx - zy * zy + cx;
                 zy = 2 * zx * zy + cy;
@@ -75,18 +68,15 @@ int main(int argc, char** argv){
                 }
             }
             
-            if (isInSet == 0) {
-                pos = y * WIDTH * STRIDE + x * STRIDE;
-                data[pos + 0] = white[0] * i / IMAX;
-                data[pos + 1] = white[1] * i / IMAX;
-                data[pos + 2] = white[2] * i / IMAX;
-                // data[pos + 3] = white[3] * i / IMAX; // don't mess with opacity
-
-				(void) fwrite(data+pos, 1, 3, fp);
-				// printf(" ");
-            } else {
+            if (isInSet) {
 				(void) fwrite(black, 1, 3, fp);
 				// printf("*");
+            } else {
+				fputc(white[0] * i / IMAX, fp);
+				fputc(white[1] * i / IMAX, fp);
+				fputc(white[2] * i / IMAX, fp);
+				// fputc(white[3] * i / IMAX, fp);
+				// printf(" ");
 			}
         }
 		// printf("\n");
