@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
 #include "mymath.h"
 
 
@@ -21,139 +22,248 @@ struct Person {
 
 static int x; // file scope
 
-char* read_file(FILE* file) {
+typedef struct {
+	char* data;
+	int length;
+	int capacity;
+	int index;
+} String;
 
-  int length = 100;
-  char* data = malloc(sizeof(char) * length);
-  int index = 0;
-  int value = 0;
+void String_init(String* a){
+	a->index = 0;
+	a->length = 0;
+	a->capacity = 2;
+	a->data = malloc(a->capacity * sizeof(char));
+}
+
+void read_file(String* a, FILE* file) {
+
+  int value;
 
   while (1) {
 
-      if (index == length) {
-          length = length * 2;
-          data = realloc(data, sizeof(char) * length);
+      if (a->index == a->capacity) {
+          a->capacity = a->capacity * 2;
+          a->data = realloc(a->data, sizeof(char) * a->capacity);
       }
 
       value = fgetc(file);
       if (value == EOF) {
-          data[index] = '\0';
-          return data;
+          a->data[a->index] = '\0';
+          break;
       } else {
-          data[index] = (char)value;
-          index += 1;
+          a->data[a->index] = (char)value;
+          a->index += 1;
       }
   }
 }
 
-void parse_string(char* arg, int* offsets, int* arg_length) {
+typedef struct {
+	int* data;
+	int length;
+	int capacity;
+	int index;
+} IntArray;
 
-  int length = *arg_length;
-  offsets = realloc(offsets, sizeof(int) * length);
+void IntArray_init(IntArray* a){
+	a->index = 0;
+	a->length = 0;
+	a->capacity = 2;
+	a->data = malloc(a->capacity * sizeof(int));
+}
+
+void calculate_offsets(IntArray* b, String* a) {
+
+  for (int i = 0; a->data[i] != '\0'; i += 1){
+
+    if (i == b->capacity) {
+        b->capacity = b->capacity * 2;
+        b->data = realloc(b->data, sizeof(char) * b->capacity);
+    }
+
+    // Turn spaces to null
+    if ( isspace(a->data[i]) ){
+      a->data[i] = '\0';
+    }
+    // Note down index at null non-null or non-null at head of series
+    if ( (a->data[i] != '\0') && (a->data[i-1] == '\0' || i == 0) ){
+      b->data[b->index] = i;
+      b->length += 1;
+      b->index += 1;
+    }
+
+  }
+}
+
+
+
+typedef struct {
+	int len;
+	int cap;
+	int ind;
+} ArrayInfo;
+
+void ArrayInfo_init(ArrayInfo* a){
+	a->ind = 0;
+	a->len = 0;
+	a->cap = 2;
+}
+
+void calculate_offsets3(int** b, ArrayInfo* info, char* a) {
+
+  (*b) = malloc(info->cap * sizeof(int));
   int index = 0;
-  
-  for (int i = 0; arg[i] != '\0'; i += 1){
 
-    if (i == length) {
-        length = length * 2;
-        offsets = realloc(offsets, sizeof(char) * length);
+  for (int i = 0; a[i] != '\0'; i += 1){
+
+    if (index == info->cap) {
+        info->cap = info->cap * 2;
+        (*b) = realloc((*b), sizeof(char) * info->cap);
     }
 
-    // if the value under the input index is a non-whitespace character 
-    // and the previous char was a whitespace char OR we are at the head of the input
-    // then note down the beginning offset of the word
+    // Turn spaces to null
+    if ( isspace(a[i]) ){
+      a[i] = '\0';
+    }
+    // Note down index at null non-null or non-null at head of series
+    if ( (a[i] != '\0') && (a[i-1] == '\0' || i == 0) ){
+      (*b)[index] = i;
+      info->len++;
+      info->ind++;
+    }
+  }
+}
 
-    if ( isspace(arg[i]) ){
-      arg[i] = '\0';
+void read_file2(char** a, FILE* file) {
+
+  int ind, cap, val; // index, capacity, value
+
+  ind = 0;
+  cap = 100;
+  (*a) = malloc(cap * sizeof(char));
+
+  while (1) {
+
+      if (ind == cap){
+        cap *= 2;
+        (*a) = realloc((*a), cap * sizeof(char));
+      }
+
+      val = fgetc(file);
+      if (val == EOF) {
+          (*a)[ind] = '\0';
+          break;
+      } else {
+          (*a)[ind] = (char)val;
+          ind += 1;
+      }
+  }
+}
+
+void parse_words(char*** b, int* length, int* capacity, char* a) {
+
+  (*b) = malloc((*capacity) * sizeof(int));
+  int index = 0;
+
+  for (int i = 0; a[i] != '\0'; i += 1){
+
+    // Double size if necessary
+    if (index == (*capacity)) {
+        (*capacity) = (*capacity) * 2;
+        (*b) = realloc((*b), sizeof(char) * (*capacity));
     }
 
-    if ( (arg[i] != '\0') && (arg[i-1] == '\0' || i == 0) ){
-      offsets[index] = i;
+    // Turn spaces to null
+    if ( isspace(a[i]) ){
+      a[i] = '\0';
+    }
+    // Note down index at null non-null or non-null at head of series
+    if ( (a[i] != '\0') && (a[i-1] == '\0' || i == 0) ){
+      (*b)[index] = a+i;
+      (*length)++;
       index++;
     }
 
   }
-  *arg_length = index;
 }
 
 
 int main()  
 {  
 
-  if (1){
+  if (0){
     x = 3;
     printf("x: %d\n", x);
     printf("x^2: %d\n", mymath_square(x));
   }
 
+  if (0){
+
+    FILE *fp;
+    String string;
+    IntArray offsets;
+
+    String_init(&string);
+    IntArray_init(&offsets);
+
+    fp = fopen("record", "r");
+    read_file(&string, fp);
+    fclose(fp);  
+
+    printf("%s\n", string.data);
+    calculate_offsets(&offsets, &string);
+
+    for (int i = 0; i < offsets.length; i += 1){    
+      printf("{%s}", string.data + offsets.data[i]);
+    }
+
+  }
+
+
+
   if (1){
+
     FILE *file;
     char* string;
+    char** words; 
+    int len, cap; // length, capacity
+    char* string2;
 
+    // Read the file into a string
     file = fopen("record", "r");
-    string = read_file(file);
+    read_file2(&string, file);
+    fclose(file);
 
-    int* offsets = malloc(2*sizeof(int));
-    int length = 100;
-    parse_string(offsets, offsets, &length);
+    // Make a copy of the string
+    string2 = malloc(strlen(string) * sizeof(char));
+    memcpy(string2, string, strlen(string)+1);
 
-    printf("%d\n", offsets[0]);
-    printf("%d\n", offsets[1]);
-    printf("%d\n", offsets[2]);
+    // Destructively parse string into words
+    len = 0; cap = 2;
+    parse_words(&words, &len, &cap, string2);
 
-    printf("%s\n", string + 0);
-    printf("%s\n", string + 6);
+    // Print the file
+    printf("%s", string);
+    // Print the words
+    for (int i = 0; i < len; i += 1){
+      printf("{%s} ", words[i]);
+    }
+    printf("\n");
+    
+    free(string);
+    free(string2);
 
-    // printf("%s", string);
-    fclose(file);  
+    
+
   }
+
+  // int* offsets;
+  // SeriesInfo offsets_info;
+  // SeriesInfo_init(&offsets_info);
 
   return 0;  
 }
 
 
 
-// int read_line(char* result, FILE* file) {
-//     int size = INIT_LINE_LENGTH;
-//     char* result = realloc(sizeof(char) * size);
-//     int position = 0;
-//     int next = 0;
 
-//     while (1) {
-
-//         if (position == size) {
-//             size = size * 2;
-//             // printf("\nREALLOC\n");
-//             result = realloc(result, sizeof(char) * size);
-//         }
-//         next = fgetc(file);
-//         if (next == EOF || next == '\n') {
-//             result[position] = '\0';
-//             return result;
-//         } else {
-//             result[position++] = (char)next;
-//         }
-//     }
-// }
-
-
-
-
-// struct Bytes {
-//   int length;
-//   char* offsets;
-//   int index;
-//   int is_in_word;
-// };
-
-// int bytes_init(struct Bytes* arg){
-
-//   arg->length = 100;
-//   arg->offsets = malloc(sizeof(char) * arg->length);
-//   arg->index = 0;
-//   arg->is_in_word = 0;
-
-// }
-
-  // Bytes offsets;
-  // bytes_init(&offsets);
