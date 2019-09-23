@@ -46,12 +46,11 @@ char* read_file(FILE* file) {
   }
 }
 
-int* parse_string(char* arg, int* length_arg) {
+void parse_string(char* arg, int* offsets, int* arg_length) {
 
-  int length = *length_arg;
-  int* offsets = malloc(sizeof(int) * length);
+  int length = *arg_length;
+  offsets = realloc(offsets, sizeof(int) * length);
   int index = 0;
-  int is_in_word = 0;
   
   for (int i = 0; arg[i] != '\0'; i += 1){
 
@@ -64,25 +63,17 @@ int* parse_string(char* arg, int* length_arg) {
     // and the previous char was a whitespace char OR we are at the head of the input
     // then note down the beginning offset of the word
 
-
-    if ( (!isspace(arg[i])) && (i == 0 || isspace(arg[i-1])) ){
-      offsets[index] = i;
-      index++;
-      is_in_word = 1;
-    }
-    if ( (i != 0) && ( (isspace(arg[i]) || arg[i] == '\0') && (!isspace(arg[i-1])) ) ) {
-      offsets[index] = i;
-      index++;
-      is_in_word = 0;
-    }
-
     if ( isspace(arg[i]) ){
       arg[i] = '\0';
     }
 
+    if ( (arg[i] != '\0') && (arg[i-1] == '\0' || i == 0) ){
+      offsets[index] = i;
+      index++;
+    }
+
   }
-  *length_arg = index;
-  return offsets;
+  *arg_length = index;
 }
 
 
@@ -102,14 +93,16 @@ int main()
     file = fopen("record", "r");
     string = read_file(file);
 
+    int* offsets = malloc(2*sizeof(int));
     int length = 100;
-    int* offsets = parse_string(string, &length);
+    parse_string(offsets, offsets, &length);
 
-    printf("%s", string + offsets[0]);
-    printf("%s", string + offsets[2]);
-    printf("%s", string + offsets[4]);
-    printf("%s", string + offsets[6]);
-    printf("%s", string + offsets[8]);
+    printf("%d\n", offsets[0]);
+    printf("%d\n", offsets[1]);
+    printf("%d\n", offsets[2]);
+
+    printf("%s\n", string + 0);
+    printf("%s\n", string + 6);
 
     // printf("%s", string);
     fclose(file);  
@@ -117,6 +110,32 @@ int main()
 
   return 0;  
 }
+
+
+
+// int read_line(char* result, FILE* file) {
+//     int size = INIT_LINE_LENGTH;
+//     char* result = realloc(sizeof(char) * size);
+//     int position = 0;
+//     int next = 0;
+
+//     while (1) {
+
+//         if (position == size) {
+//             size = size * 2;
+//             // printf("\nREALLOC\n");
+//             result = realloc(result, sizeof(char) * size);
+//         }
+//         next = fgetc(file);
+//         if (next == EOF || next == '\n') {
+//             result[position] = '\0';
+//             return result;
+//         } else {
+//             result[position++] = (char)next;
+//         }
+//     }
+// }
+
 
 
 
