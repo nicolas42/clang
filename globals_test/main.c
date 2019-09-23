@@ -20,10 +20,10 @@ struct Person {
 
 static int x; // file scope
 
-char* read_file(char* data, FILE* file) {
+char* read_file(FILE* file) {
 
     int length = 100;
-    malloc(sizeof(char) * length);
+    char* data = malloc(sizeof(char) * length);
     int index = 0;
     int value = 0;
 
@@ -55,18 +55,16 @@ int main()
     printf("x^2: %d\n", mymath_square(x));
   }
 
+  if (1){
+    FILE *file;
+    char* string;
 
-  FILE *file;
-  char* string;
-
-
-  file = fopen("record", "r");
-  read_file(string, file);
-  
-  printf("%s", string);
-
-  fclose(file);  
-
+    file = fopen("record", "r");
+    string = read_file(file);
+    
+    printf("%s", string);
+    fclose(file);  
+  }
 
   return 0;  
 }
