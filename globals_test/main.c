@@ -48,6 +48,35 @@ void read_file(char** a, FILE* file) {
 // 	a->capacity = 2;
 // }
 
+void destructive_parse(
+    char*** b, int* length, char* a, int(*fn)(int) ) {
+
+  int capacity = WORDS_INITIAL_CAPACITY;
+  (*b) = malloc(capacity * sizeof(int));
+  int index = 0;
+
+  for (int i = 0; a[i] != '\0'; i += 1){
+
+    // Double size if necessary
+    if (index == capacity) {
+        capacity *= 2;
+        (*b) = realloc((*b), sizeof(char) * capacity);
+    }
+
+    // Turn spaces to null
+    if ( fn(a[i]) ){
+        a[i] = '\0';
+    }
+    // Note down index at null non-null junctions 
+    // or at a non-null character which is at the head of a series
+    if ( (a[i] != '\0') && (a[i-1] == '\0' || i == 0) ){
+        (*b)[index] = a+i;
+        (*length)++;
+        index++;
+    }
+  }
+}
+
 void parse_words(char*** b, int* length, char* a) {
 
     int capacity = WORDS_INITIAL_CAPACITY;
@@ -66,13 +95,30 @@ void parse_words(char*** b, int* length, char* a) {
         if ( isspace(a[i]) ){
             a[i] = '\0';
         }
-        // Note down index at null non-null or non-null at head of series
+        // Note down index at null non-null junctions 
+        // or at a non-null character which is at the head of a series
         if ( (a[i] != '\0') && (a[i-1] == '\0' || i == 0) ){
             (*b)[index] = a+i;
             (*length)++;
             index++;
         }
     }
+}
+
+int isnewline(int a){
+  if ((char)a == '\n' || (char)a == '\r'){
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+int iscolon(int a){
+  if ((char)a == ':'){
+    return 1;
+  } else {
+    return 0;
+  }
 }
 
 int main()  
@@ -103,9 +149,8 @@ int main()
     string2 = malloc(strlen(string) * sizeof(char));
     memcpy(string2, string, strlen(string)+1);
     
-    // Find where the words begin and change whitespace to nulls
-    parse_words(&words, &words_length, string2);
-
+    // Find where the words begin and change delimiters to nulls
+    destructive_parse(&words, &words_length, string2, isnewline);
 
     // Print the file and words
     printf("%s", string);
