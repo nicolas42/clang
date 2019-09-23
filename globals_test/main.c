@@ -253,8 +253,6 @@ int main()
     free(string);
     free(string2);
 
-    
-
   }
 
   // int* offsets;
