@@ -110,97 +110,36 @@ FloatArray* float_find(FloatArray* a, double b){
 	return a;
 }
 
-void test_dynamic_usage(){
+// void test_dynamic_usage(){
 
-	FloatArray arr;
-	float_init(&arr);
+// 	FloatArray arr;
+// 	float_init(&arr);
 
-	double input[] = {1,2,3,4,5,6,234.234, 345.345,5};
-	for (int i = 0; i < 9; i += 1){
-		float_append(&arr, input[i]);
-	}
-
-	float_print(&arr);
-
-	float_print(float_find(&arr, 234.234));
-	float_print(float_remove(&arr, 4));
-
-	float_print(float_head(&arr));
-	float_print(float_tail(&arr));
-
-	while (!float_is_tail(&arr)){
-
-	}
-	free(arr.data);
-}
-
-
-int main(int argc, char** argv){
-
-	printf("\nTest Dynamic Usage\n");
-	test_dynamic_usage();
-
-	printf("\n");
-	return 0;
-}
-
-
-
-
-// void test_static_usage(void){
-// 	int i = 0;
-// 	int LENGTH = 5;
-// 	int a[LENGTH];
-
-// 	for (i = 0; i < LENGTH; ++i)
-// 		thing_make(&a[i], rand(), rand());
-
-// 	for (i = 0; i < LENGTH; ++i){
-// 		thing_print(a[i]);
-// 		printf(INT_ARRAY_SEPARATOR);
+// 	double input[] = {1,2,3,4,5,6,234.234, 345.345,5};
+// 	for (int i = 0; i < 9; i += 1){
+// 		float_append(&arr, input[i]);
 // 	}
-// 	printf("\n");
+
+// 	float_print(&arr);
+
+// 	float_print(float_find(&arr, 234.234));
+// 	float_print(float_remove(&arr, 4));
+
+// 	float_print(float_head(&arr));
+// 	float_print(float_tail(&arr));
+
+// 	while (!float_is_tail(&arr)){
+
+// 	}
+// 	free(arr.data);
 // }
 
-// int main(int argc, double** argv){
+
+// int main(int argc, char** argv){
 
 // 	printf("\nTest Dynamic Usage\n");
 // 	test_dynamic_usage();
 
-	// int N = 0;
-
-	// // Argument Validation
-	// switch (argc){
-	// 	case 2:
-	// 		N = atoi(argv[1]);
-	// 		break;
-	// 	case 1:
-	// 		N = 5; // default
-	// 		break;
-	// 	default:
-	// 	    usage();
-	// 		break;
-	// }
-
-	// // double* buffer = malloc(sizeof(double));
-
-	// printf("\nTest Dynamic Usage\n");
-	// test_dynamic_usage();
-	
-	// printf("\nTest Static Usage\n");
-	// test_static_usage();
-	
-	// // free(buffer);
-	
-
-
-	// printf("\nTest asprintf\n");
-	// double* test = malloc(1);
-	// asprintf(&test, "Hello you bastard\n"); // malloc
-
-	// puts(test);
-	// free(test);
-	
-	
+// 	printf("\n");
 // 	return 0;
 // }

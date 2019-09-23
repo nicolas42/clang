@@ -110,97 +110,36 @@ String* string_find(String* a, char b){
 	return a;
 }
 
-void test_dynamic_usage(){
+// void test_dynamic_usage(){
 
-	String str;
-	string_init(&str);
+// 	String str;
+// 	string_init(&str);
 
-	char* input = "Hello world";
-	for (int i = 0; i < strlen(input); i += 1){
-		string_append(&str, input[i]);
-	}
-
-	string_print(&str);
-
-	string_print(string_find(&str, 'e'));
-	string_print(string_remove(&str, 4));
-
-	string_print(string_head(&str));
-	string_print(string_tail(&str));
-
-	while (!string_is_tail(&str)){
-
-	}
-	free(str.data);
-}
-
-
-int main(int argc, char** argv){
-
-	printf("\nTest Dynamic Usage\n");
-	test_dynamic_usage();
-
-	printf("\n");
-	return 0;
-}
-
-
-
-
-// void test_static_usage(void){
-// 	int i = 0;
-// 	int LENGTH = 5;
-// 	int a[LENGTH];
-
-// 	for (i = 0; i < LENGTH; ++i)
-// 		thing_make(&a[i], rand(), rand());
-
-// 	for (i = 0; i < LENGTH; ++i){
-// 		thing_print(a[i]);
-// 		printf(INT_ARRAY_SEPARATOR);
+// 	char* input = "Hello world";
+// 	for (int i = 0; i < strlen(input); i += 1){
+// 		string_append(&str, input[i]);
 // 	}
-// 	printf("\n");
+
+// 	string_print(&str);
+
+// 	string_print(string_find(&str, 'e'));
+// 	string_print(string_remove(&str, 4));
+
+// 	string_print(string_head(&str));
+// 	string_print(string_tail(&str));
+
+// 	while (!string_is_tail(&str)){
+
+// 	}
+// 	free(str.data);
 // }
+
 
 // int main(int argc, char** argv){
 
 // 	printf("\nTest Dynamic Usage\n");
 // 	test_dynamic_usage();
 
-	// int N = 0;
-
-	// // Argument Validation
-	// switch (argc){
-	// 	case 2:
-	// 		N = atoi(argv[1]);
-	// 		break;
-	// 	case 1:
-	// 		N = 5; // default
-	// 		break;
-	// 	default:
-	// 	    usage();
-	// 		break;
-	// }
-
-	// // char* buffer = malloc(sizeof(char));
-
-	// printf("\nTest Dynamic Usage\n");
-	// test_dynamic_usage();
-	
-	// printf("\nTest Static Usage\n");
-	// test_static_usage();
-	
-	// // free(buffer);
-	
-
-
-	// printf("\nTest asprintf\n");
-	// char* test = malloc(1);
-	// asprintf(&test, "Hello you bastard\n"); // malloc
-
-	// puts(test);
-	// free(test);
-	
-	
+// 	printf("\n");
 // 	return 0;
 // }

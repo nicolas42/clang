@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-static const char INT_FORMAT[4] = "%d \0";
+static const char INT_FORMAT[3] = "%d\0";
 static const char INT_SEPARATOR[2] = " \0";
 
 typedef struct {
@@ -32,23 +32,23 @@ IntArray* intarray_tail(IntArray* a){
 	return a;
 }
 
-int intarray_is_head(IntArray a){
-	return a.index == 0;
+int intarray_is_head(IntArray* a){
+	return a->index == 0;
 }
 
-int intarray_is_tail(IntArray a){
-	return a.index == a.length;
+int intarray_is_tail(IntArray* a){
+	return a->index == a->length;
 }
 
 IntArray* intarray_next(IntArray* a){
-	if (!intarray_is_tail(*a)){
+	if (!intarray_is_tail(a)){
 		a->index++;
 	}
 	return a;
 }
 
 IntArray* intarray_back(IntArray* a){
-	if (!intarray_is_head(*a)){
+	if (!intarray_is_head(a)){
 		a->index--;
 	}
 	return a;
@@ -90,12 +90,12 @@ IntArray* intarray_insert(IntArray* a, int b, int index){
 }
 
 void intarray_print(IntArray* a){
-	printf(" [ ");
+	printf("{");
 	for (int i = a->index; i < a->length; i += 1){
 		printf(INT_FORMAT, a->data[i]);
 		printf(INT_SEPARATOR);
 	}
-	printf("]\n");
+	printf("}\n");
 }
 
 IntArray* intarray_find(IntArray* a, int b){
@@ -110,94 +110,36 @@ IntArray* intarray_find(IntArray* a, int b){
 	return a;
 }
 
-void test_dynamic_usage(){
+// void test_dynamic_usage(){
 
-	IntArray arr;
-	intarray_init(&arr);
+// 	IntArray str;
+// 	intarray_init(&str);
 
-	int i;	
-	for (i=0; i<10; i+=1){
-		intarray_append(&arr, i);
-	}
-
-	intarray_print(&arr);
-
-	intarray_print(intarray_find(&arr, 5));
-	intarray_print(intarray_remove(&arr, 7));
-
-	intarray_print(intarray_head(&arr));
-	intarray_print(intarray_tail(&arr));
-
-	free(arr.data);
-}
-
-
-int main(int argc, char** argv){
-
-	printf("\nTest Dynamic Usage\n");
-	test_dynamic_usage();
-
-	printf("\n");
-	return 0;
-}
-
-
-
-
-// void test_static_usage(void){
-// 	int i = 0;
-// 	int LENGTH = 5;
-// 	int a[LENGTH];
-
-// 	for (i = 0; i < LENGTH; ++i)
-// 		thing_make(&a[i], rand(), rand());
-
-// 	for (i = 0; i < LENGTH; ++i){
-// 		thing_print(a[i]);
-// 		printf(INT_ARRAY_SEPARATOR);
+// 	int* input = "Hello world";
+// 	for (int i = 0; i < strlen(input); i += 1){
+// 		intarray_append(&str, input[i]);
 // 	}
-// 	printf("\n");
+
+// 	intarray_print(&str);
+
+// 	intarray_print(intarray_find(&str, 'e'));
+// 	intarray_print(intarray_remove(&str, 4));
+
+// 	intarray_print(intarray_head(&str));
+// 	intarray_print(intarray_tail(&str));
+
+// 	while (!intarray_is_tail(&str)){
+
+// 	}
+// 	free(str.data);
 // }
+
 
 // int main(int argc, char** argv){
 
 // 	printf("\nTest Dynamic Usage\n");
 // 	test_dynamic_usage();
 
-	// int N = 0;
-
-	// // Argument Validation
-	// switch (argc){
-	// 	case 2:
-	// 		N = atoi(argv[1]);
-	// 		break;
-	// 	case 1:
-	// 		N = 5; // default
-	// 		break;
-	// 	default:
-	// 	    usage();
-	// 		break;
-	// }
-
-	// // char* buffer = malloc(sizeof(char));
-
-	// printf("\nTest Dynamic Usage\n");
-	// test_dynamic_usage();
-	
-	// printf("\nTest Static Usage\n");
-	// test_static_usage();
-	
-	// // free(buffer);
-	
-
-
-	// printf("\nTest asprintf\n");
-	// char* test = malloc(1);
-	// asprintf(&test, "Hello you bastard\n"); // malloc
-
-	// puts(test);
-	// free(test);
-	
-	
+// 	printf("\n");
 // 	return 0;
 // }
