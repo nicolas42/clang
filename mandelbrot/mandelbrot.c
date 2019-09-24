@@ -17,8 +17,10 @@ int main(int argc, char** argv){
     int WIDTH = 1000; // pixels
     int HEIGHT = 1000;
 
-	int data_length = 4 * WIDTH * HEIGHT;
-	char data[data_length];
+	// int data_length = 4 * WIDTH * HEIGHT;
+	// char data[data_length];
+	// // char* data = malloc(data_length);
+    
 
     double xmin = -2;
     double xmax = 2;
@@ -81,8 +83,6 @@ int main(int argc, char** argv){
         }
 		// printf("\n");
     }
-
-    //  ctx.putImageData(imgData, 0, 0); // Put data in canvas' 2D context
 
   (void) fclose(fp);
   return 0;
