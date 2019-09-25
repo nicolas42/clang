@@ -54,25 +54,29 @@ void multivector_print(double *a){
 }
 
 void multivector_add(double *c, double *a, double *b){
-	for (int i = 0; i < 8; i += 1){
+	int i;
+	for (i = 0; i < 8; i += 1){
 		c[i] = a[i] + b[i];
 	}
 }
 
 void multivector_negate(double *c, double *a){
-	for (int i = 0; i < 8; i += 1){
+	int i;
+	for (i = 0; i < 8; i += 1){
 		c[i] = - a[i];
 	}
 }
 
 void multivector_init(double *a){
-	for (int i = 0; i < 8; i += 1){
+	int i;
+	for (i = 0; i < 8; i += 1){
 		a[i] = 0;
 	}
 }
 
 void multivector_copy(double *a, double *b){
-	for (int i = 0; i < 8; i += 1){
+	int i;
+	for (i = 0; i < 8; i += 1){
 		a[i] = b[i];
 	}
 }
@@ -116,7 +120,8 @@ void string_maybe_realloc(String** a){
 
 String* string_add(String* a, char *b){
 
-	for (int i = 0; b[i] != '\0'; i += 1){
+	int i;
+	for (i = 0; b[i] != '\0'; i += 1){
 		string_maybe_realloc(&a);
 		a->data[a->length] = b[i];
 		a->length++;
@@ -145,13 +150,15 @@ void test_array_multivector(void){
 	double b[8] = {0,1,0,1};
 	double Rab[8] = {0};
 
+	String s; 
+
 	multivector_rotate(Rab, v, a, b);
 	// multivector_product(ab, a, b);
 	// multivector_product(ba, b, a);
 	// multivector_product(v2, v, ab);
 	// multivector_product(Rab, ba, v2);
 
-	String s; string_init(&s);
+	string_init(&s);
 	string_add(&s, "// Perform rotation of v by twice the angle between a and b: v,a,b,Rab \n");
 	string_add_multivector(&s, v); string_add(&s, "\n");
 	string_add_multivector(&s, a); string_add(&s, "\n");
@@ -191,6 +198,22 @@ void multivector_product2(Multivector *c, Multivector *a_arg, Multivector *b_arg
 
 }
 
+void multivector_rotate2(Multivector *Rab, Multivector *v, Multivector *a, Multivector *b){
+
+	// Rotate v by twice the angle between a and b
+	// And scale by |ab|^2 ???
+
+	Multivector ab, ba, v2;
+	multivector_init2(&ab); multivector_init2(&ba); multivector_init2(&v2);
+
+	multivector_product2(&ab, a, b);
+	multivector_product2(&ba, b, a);
+
+	multivector_product2(&v2, v, &ab);
+	multivector_product2(Rab, &ba, &v2);
+}
+
+
 void test_struct_multivector(void){
 	
 	// Multivector v,a,b,ab,ba,v2,Rab;
@@ -199,21 +222,24 @@ void test_struct_multivector(void){
 	Multivector v = {0,1};
 	Multivector a = {0,1};
 	Multivector b = {0,1,1};
-	Multivector ab = {0};
-	Multivector ba = {0};
-	Multivector v2 = {0};
+	// Multivector ab = {0};
+	// Multivector ba = {0};
+	// Multivector v2 = {0};
 	Multivector Rab = {0};
 
+	char str[200];
+
+
 	// Rotate x by 2 * angle between x and x+z
-	multivector_product2(&ab, &a, &b);
-	multivector_product2(&ba, &b, &a);
-	multivector_product2(&v2, &v, &ab);
-	multivector_product2(&Rab, &ba, &v2);
+	multivector_rotate2(&Rab, &v, &a, &b);
+	// multivector_product2(&ab, &a, &b);
+	// multivector_product2(&ba, &b, &a);
+	// multivector_product2(&v2, &v, &ab);
+	// multivector_product2(&Rab, &ba, &v2);
 
 	// Print Rab
-	char str[200];
 	snprintf(str, sizeof(str), "[%.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f]", 
-			Rab.e0,Rab.e1,Rab.e2,Rab.e3,Rab.e23,Rab.e31,Rab.e12,Rab.e123);
+			Rab.e0, Rab.e1, Rab.e2, Rab.e3, Rab.e23, Rab.e31, Rab.e12, Rab.e123);
 	assert(0 == strcmp(str, "[0 0 2 0 0 0 0 0]"));
 	printf("%s\n", str);
 
@@ -246,16 +272,19 @@ double* mul(double *a, double *b){
 	return c;
 }
 void test_mul(void){
+
 	double v[8] = {0,1}; 
 	double a[8] = {0,1}; 
 	double b[8] = {0,1,1};
 	double *c;
-	
+	int i;
+
+
 	c = mul(mul(b, mul(mul(a,v),a) ),b);
 	printf("[%.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f]\n", 
 			c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7]);
 
-	for (int i = 0; i < garbage_length; i += 1){
+	for (i = 0; i < garbage_length; i += 1){
 		free(garbage[i]);
 	}
 }
