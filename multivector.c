@@ -4,10 +4,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
+#include <string.h>
 
-#define mul(c,a,b) geometric_product(c,a,b)
-
-void geometric_product(double *c, double *a, double *b){
+void multivector_product(double *c, double *a, double *b){
 	// I've probably made a mistake somewhere o_o
 	c[0] = a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3] - a[4]*b[4] - a[5]*b[5] - a[6]*b[6] - a[7]*b[7];
 
@@ -23,67 +23,176 @@ void geometric_product(double *c, double *a, double *b){
 }
 
 
-void geometric_print(double *a){
+void multivector_print(double *a){
 	printf("[%.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f]", a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]);
 }
 
-// void geometric_add(double *c, double *a, double *b){
-// 	for (int i = 0; i < 8; i += 1){
-// 		c[i] = a[i] + b[i];
-// 	}
-// }
+void multivector_add(double *c, double *a, double *b){
+	for (int i = 0; i < 8; i += 1){
+		c[i] = a[i] + b[i];
+	}
+}
 
-// void geometric_negate(double *c, double *a){
-// 	for (int i = 0; i < 8; i += 1){
-// 		c[i] = - a[i];
-// 	}
-// }
+void multivector_negate(double *c, double *a){
+	for (int i = 0; i < 8; i += 1){
+		c[i] = - a[i];
+	}
+}
+
+void multivector_init(double *a){
+	for (int i = 0; i < 8; i += 1){
+		a[i] = 0;
+	}
+}
+
+void multivector_copy(double *a, double *b){
+	for (int i = 0; i < 8; i += 1){
+		a[i] = b[i];
+	}
+}
+
+void multivector_rotate(double *Rab, double *v, double *a, double *b){
+
+	// Rotate v by twice the angle between a and b
+	// And scale it by |ab|^2 I think
+
+	double ab[8], ba[8], v2[8];
+	multivector_init(ab); multivector_init(ba); multivector_init(v2);
+
+	multivector_product(ab, a, b);
+	multivector_product(ba, b, a);
+
+	multivector_product(v2, v, ab);
+	multivector_product(Rab, ba, v2);
+}
+
+
+// make_vector(&v, 1,0,0);
+// make_bivector(&v, 1,0,0);
+// make_complex(&v,1,1);
+// make_quaternion(&v,1,2,3,4);
+// make_scalar(&v,1);
+// make_four_vector(&v,1,2,3,4);
+
+// typedef struct {
+// 	double x,y,z;
+// }Vector;
+// typedef struct {
+// 	double yz,zx,xy;
+// }Bivector;
+
+// typdef struct {
+// 	double scalar;
+// 	Vector vector;
+// 	Bivector multivector;
+// 	double pseudoscalar;
+// } Multivector;
+
+// typdef struct {
+// 	double e0, e1, e2, e3, e23, e31, e12;
+// } Multivector;
+
+typedef struct {
+	char* data;
+	int length;
+	int capacity;
+	int index;
+} String;
+
+String* string_init(String* a){
+	a->index = 0;
+	a->length = 0;
+	a->capacity = 2;
+	a->data = malloc(a->capacity * sizeof(char));
+	return a;
+}
+
+String* string_add(String* a, char *b){
+
+	for (int i = 0; b[i] != '\0'; i += 1){
+		if (a->length == a->capacity){
+			a->capacity *= 2;
+			a->data = realloc(a->data, a->capacity * sizeof(char));
+		}
+		a->data[a->length] = b[i];
+		a->length++;
+
+	}	
+	a->data[a->length] = '\0';
+
+	return a;
+}
+
+String* string_add_multivector(String* a, double* mv){
+
+	char buf[8 * (2 + 0) + 11]; // 8 floating point values with 11 addition spaces
+	snprintf(buf, sizeof(buf), "[%.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f]", 
+			mv[0], mv[1], mv[2], mv[3], mv[4], mv[5], mv[6], mv[7]);
+	// %[flags][width][.precision][length]specifier
+
+	for (int i = 0; buf[i] != '\0'; i += 1){
+		if (a->length == a->capacity){
+			a->capacity *= 2;
+			a->data = realloc(a->data, a->capacity * sizeof(char));
+		}
+		a->data[a->length] = buf[i];
+		a->length++;
+
+	}	
+	a->data[a->length] = '\0';
+
+	return a;
+}
 
 // Test Multiplying two 3 dimensional multivectors
 // https://www.euclideanspace.com/maths/algebra/clifford/d3/arithmetic/index.htm
 int main(int argc, char **argv)
 {
-/*
-	double a[8] = {1, 0, 0, 0, 1, 0, 0, 0};
-	double b[8] = {1, 0, 0, 0, 1, 0, 0, 0};
-	double c[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 
-	geometric_product(c,a,b);
+	// v.x=2;
+	// v.y=3;
+	// v.xy=2;
+	// v.yz=3;
 
-	printf("// Test Multiplying two 3 dimensional multivectors\n");
-	geometric_print(a); printf("\n");
-	geometric_print(b); printf("\n");
-	geometric_print(c); printf("\n");
-*/	
+	// v 0 1 
+	// a 0 1
+	// b 0 1 1
 
-	// make_vector(&v, 1,0,0);
-	// make_bivector(&v, 1,0,0);
-	// make_complex(&v,1,1);
-	// make_quaternion(&v,1,2,3,4);
-	// make_scalar(&v,1);
-	// make_four_vector(&v,1,2,3,4);
+	double v[8] = {0,1}; 
+	double a[8] = {0,1}; 
+	double b[8] = {0,1,1};
 
-	double v[8] = {0, 1, 0, 0, 0, 0, 0, 0};
-	double a[8] = {0, 1, 0, 0, 0, 0, 0, 0};
-	double b[8] = {0, 1, 1, 0, 0, 0, 0, 0};
+	double ab[8], ba[8], v2[8], Rab[8];
+	multivector_init(ab); multivector_init(ba); multivector_init(v2); multivector_init(Rab); 
 
-	double ab[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-	double ba[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-	double v2[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-	double Rab[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-
-	mul(ab, a, b);
-	mul(ba, b, a);
-
-	mul(v2, v, ab);
-	mul(Rab, ba, v2);
+	multivector_rotate(Rab, v, a, b);
+	// multivector_product(ab, a, b);
+	// multivector_product(ba, b, a);
+	// multivector_product(v2, v, ab);
+	// multivector_product(Rab, ba, v2);
 
 
-	printf("// Test Multiplying two 3 dimensional multivectors\n");
-	geometric_print(v); printf("\n");
-	geometric_print(a); printf("\n");
-	geometric_print(b); printf("\n");
-	geometric_print(Rab); printf("\n");
+	printf("// Perform rotation of v by twice the angle between a and b: v,a,b,Rab \n");
+	multivector_print(v); printf("\n");
+	multivector_print(a); printf("\n");
+	multivector_print(b); printf("\n");
+	multivector_print(Rab); printf("\n");
+
+
+	String str; string_init(&str);
+
+	// string_add(&str, "Hello ");
+	// string_add(&str, "World!");
+	// printf("%s\n", str.data);
+	
+	memset(str.data, '\0', str.capacity);
+	str.length = 0;
+	string_add_multivector(&str, (double[8]){0,0,1,});
+	string_add_multivector(&str, b);
+	printf("%s\n", str.data);
+
+
+
 
 	return 0;
 }
