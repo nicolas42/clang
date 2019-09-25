@@ -185,10 +185,11 @@ int main(int argc, char **argv)
 	// string_add(&str, "World!");
 	// printf("%s\n", str.data);
 	
-	memset(str.data, '\0', str.capacity);
-	str.length = 0;
-	string_add_multivector(&str, (double[8]){0,0,1,});
-	string_add_multivector(&str, b);
+	// memset(str.data, '\0', str.capacity);
+	// str.length = 0;
+
+	string_add_multivector(&str, a); string_add("\n");
+	string_add_multivector(&str, b); string_add("\n");
 	printf("%s\n", str.data);
 
 
