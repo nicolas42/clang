@@ -160,7 +160,7 @@ int main(int argc, char **argv)
 	string_add_multivector(&s, v); string_add(&s, "\n");
 	string_add_multivector(&s, a); string_add(&s, "\n");
 	string_add_multivector(&s, b); string_add(&s, "\n");
-	
+	string_add_multivector(&s, Rab); string_add(&s, "\n");
 	printf("%s\n", s.data);
 
 	// To reuse string
