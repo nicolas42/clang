@@ -165,7 +165,11 @@ void multivector_product2(Multivector *c, Multivector *a_arg, Multivector *b_arg
 }
 
 void test_struct_multivector(void){
-	Multivector v,a,b;
+	
+	Multivector v = {0,1};
+	Multivector a = {0,1};
+	Multivector b = {0,1,0,1};
+
 	Multivector ab,ba,v2,Rab;
 
 	multivector_init2(&v); multivector_init2(&a); multivector_init2(&b); 
