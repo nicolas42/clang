@@ -14,7 +14,7 @@
 // https://www.euclideanspace.com/maths/algebra/clifford/d3/arithmetic/index.htm
 
 
-// Doc
+// === Array Version ===
 // Multivectors are implemented as 8 element arrays of doubles
 // So if 'a' was a multivector then a[0] a[1:3] a[4:6] a[7] 
 // would be the scalar, vector3, bivector3, and pseudo-scalar parts respectively.
@@ -138,8 +138,35 @@ String* string_add_multivector(String* a, double* mv){
 }
 
 
+void test_array_multivector(void){
 
-// Struct multivector
+	double v[8] = {0,1}; 
+	double a[8] = {0,1}; 
+	double b[8] = {0,1,0,1};
+	double Rab[8] = {0};
+
+	multivector_rotate(Rab, v, a, b);
+	// multivector_product(ab, a, b);
+	// multivector_product(ba, b, a);
+	// multivector_product(v2, v, ab);
+	// multivector_product(Rab, ba, v2);
+
+	String s; string_init(&s);
+	string_add(&s, "// Perform rotation of v by twice the angle between a and b: v,a,b,Rab \n");
+	string_add_multivector(&s, v); string_add(&s, "\n");
+	string_add_multivector(&s, a); string_add(&s, "\n");
+	string_add_multivector(&s, b); string_add(&s, "\n");
+	string_add_multivector(&s, Rab); string_add(&s, "\n");
+	printf("%s\n", s.data);
+
+	// To reuse string
+	// memset(s.data, '\0', s.allocated);
+	// s.length = 0;
+
+}
+
+
+// === Struct Version ===
 
 typedef struct {
 	double e0, e1, e2, e3, e23, e31, e12, e123;
@@ -166,23 +193,20 @@ void multivector_product2(Multivector *c, Multivector *a_arg, Multivector *b_arg
 
 void test_struct_multivector(void){
 	
+	// Multivector v,a,b,ab,ba,v2,Rab;
+	// multivector_init2(&v); multivector_init2(&v); multivector_init2(&v); multivector_init2(&v); multivector_init2(&v); multivector_init2(&v); multivector_init2(&v); multivector_init2(&v); multivector_init2(&v); 
+
 	Multivector v = {0,1};
 	Multivector a = {0,1};
-	Multivector b = {0,1,0,1};
-
-	Multivector ab,ba,v2,Rab;
-
-	multivector_init2(&v); multivector_init2(&a); multivector_init2(&b); 
-	multivector_init2(&ab); multivector_init2(&ba); multivector_init2(&v2); multivector_init2(&Rab); 
+	Multivector b = {0,1,1};
+	Multivector ab = {0};
+	Multivector ba = {0};
+	Multivector v2 = {0};
+	Multivector Rab = {0};
 
 	// Rotate x by 2 * angle between x and x+z
-	v.e1 = 1;
-	a.e1 = 1;
-	b.e1 = 1; b.e2 = 1;
-
 	multivector_product2(&ab, &a, &b);
 	multivector_product2(&ba, &b, &a);
-
 	multivector_product2(&v2, &v, &ab);
 	multivector_product2(&Rab, &ba, &v2);
 
@@ -195,40 +219,57 @@ void test_struct_multivector(void){
 
 }
 
-void test_array_multivector(void){
 
+
+// === Dynamic Version with leaks :) ===
+
+static double *recycle[1000];
+static int recycle_length = 0;
+
+double* mul(double *a, double *b){
+	
+	double *c = malloc(8 * sizeof(*c));
+	recycle[recycle_length++] = c;
+
+	c[0] = a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3] - a[4]*b[4] - a[5]*b[5] - a[6]*b[6] - a[7]*b[7];
+
+	c[1] = a[0]*b[1] + a[1]*b[0] - a[2]*b[6] + a[6]*b[2] + a[3]*b[5] - a[5]*b[3] + a[7]*b[4] + a[4]*b[7];
+	c[2] = a[0]*b[2] + a[2]*b[0] + a[1]*b[6] - a[6]*b[1] - a[3]*b[4] + a[4]*b[3] - a[7]*b[5] - a[5]*b[7];
+	c[3] = a[0]*b[3] + a[3]*b[0] - a[1]*b[5] + a[5]*b[1] + a[2]*b[4] - a[4]*b[2] + a[7]*b[6] + a[6]*b[7];
+
+	c[4] = a[4]*b[0] + a[0]*b[4] + a[2]*b[3] - a[3]*b[2] + a[6]*b[5] - a[5]*b[6] + a[7]*b[1] + a[1]*b[7];
+	c[5] = a[5]*b[0] + a[0]*b[5] + a[3]*b[1] - a[1]*b[3] + a[4]*b[6] - a[6]*b[4] + a[7]*b[2] + a[2]*b[7];
+	c[6] = a[6]*b[0] + a[0]*b[6] + a[1]*b[2] - a[2]*b[1] + a[5]*b[4] - a[4]*b[5] + a[7]*b[3] + a[3]*b[7];
+
+	c[7] = a[0]*b[7] + a[7]*b[0] + a[1]*b[4] + a[4]*b[1] + a[2]*b[5] + a[5]*b[2] + a[3]*b[6] + a[6]*b[3];
+	
+	return c;
+}
+void test_mul(void){
 	double v[8] = {0,1}; 
 	double a[8] = {0,1}; 
-	double b[8] = {0,1,0,1};
+	double b[8] = {0,1,1};
 
-	double ab[8], ba[8], v2[8], Rab[8];
-	multivector_init(ab); multivector_init(ba); multivector_init(v2); multivector_init(Rab); 
+	double *c = mul(mul(b, mul(mul(a,v),a) ),b);
+	printf("[%.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f]\n", 
+			c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7]);
 
-	multivector_rotate(Rab, v, a, b);
-	// multivector_product(ab, a, b);
-	// multivector_product(ba, b, a);
-	// multivector_product(v2, v, ab);
-	// multivector_product(Rab, ba, v2);
-
-	String s; string_init(&s);
-	string_add(&s, "// Perform rotation of v by twice the angle between a and b: v,a,b,Rab \n");
-	string_add_multivector(&s, v); string_add(&s, "\n");
-	string_add_multivector(&s, a); string_add(&s, "\n");
-	string_add_multivector(&s, b); string_add(&s, "\n");
-	string_add_multivector(&s, Rab); string_add(&s, "\n");
-	printf("%s\n", s.data);
-
-	// To reuse string
-	// memset(s.data, '\0', s.allocated);
-	// s.length = 0;
-
+	for (int i = 0; i < recycle_length; i += 1){
+		free(recycle[i]);
+	}
 }
+
+
+
+
 int main(int argc, char **argv)
 {
 
 	test_array_multivector();
-	test_struct_multivector();
 
+	printf("Other Versions\n");
+	test_struct_multivector();
+	test_mul();
 	return 0;
 }
 
