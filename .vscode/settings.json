@@ -7,6 +7,8 @@
         "vector": "c",
         "algorithm": "c",
         "random": "c",
-        "assert.h": "c"
+        "assert.h": "c",
+        "multivec.h": "c",
+        "mystdlib.h": "c"
     }
 }

@@ -1,11 +1,5 @@
 #include <stdlib.h>
-
-typedef struct {
-	char* data;
-	int length;
-	int allocated;
-	int index;
-} String;
+#include "mystring.h"
 
 String* string_init(String* a){
 	a->index = 0;
