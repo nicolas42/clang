@@ -13,7 +13,7 @@ int read_file1(char* filename)
                 if (c == EOF){
                         break;
                 } else {
-                        putc(c, stdout);
+                    putc(c, stdout);
 
                 }
         }
