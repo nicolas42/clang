@@ -26,6 +26,32 @@ int main(int argc, char **argv)
 {
         printf("Hello World\r\n");
         read_file1("main.c");
+
+	char filename[20] = "main.c";
+	FILE* file = fopen(filename, "r");
+	char buffer[1000000];
+	int buffer_length = 0;
+	int c = 0;
+
+	while(1){
+		c = fgetc(file);
+		if (c != EOF){
+			buffer[buffer_length++] = c;
+		} else {
+			buffer[buffer_length++] = '\0';
+			break;
+		}
+	}
+	
+	for (int i = 0; i < 1000; i++){
+		fputc(buffer[i], stdout);
+	
+	}
+	char input1[20];
+	scanf("%c", input1);
+	printf("%s\r\n", buffer);
+
+
         return 0;
 }
 
