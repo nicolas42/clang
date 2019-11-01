@@ -32,15 +32,16 @@ int read_file(char *buff, int capacity, char *filename)
 int main()
 {
 
-	// printf("Hello world\r\n");
+	int buffer_length = 1000000; // 1mb
+	char buffer[buffer_length];
 
-	// Read file into a static buffer
-	int capacity = 1000000; // 1mb
-	char buffer[capacity];
-	int written = read_file(buffer, capacity, "main.c");
+	// int written = read_file(buffer, buffer_length, "main.c");
+	// printf("%s\r\n", buffer);
+	// printf("%d/%d chars written \r\n", written, buffer_length);
 
-	printf("%s\r\n", buffer);
-	printf("%d/%d chars written \r\n", written, capacity);
+	FILE *fp = fopen("main.c", "r");
+    fread(buffer, 1000000, 1, fp);
+	printf("%s", buffer);
 
 	return 0;
 }
