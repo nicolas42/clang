@@ -1,38 +1,32 @@
 #include <stdio.h>
 
-int read_file(char *buff, int N, char *filename)
+int read_file(char *buff, int capacity, char *filename)
 {
 
-	// char filename[100] = "main.c";
-	// int N = 1000000;
-	// char buff[N];
-
-	int i = 0;
-	int c = 0;
+	int index = 0;
 	FILE *fp = fopen("main.c", "r");
 
-	// if get to the end of the buff or the end of the file
-	// then write a null and return
-	// otherwise just copy the character
-
+	// if at the end of the buffer or the file then return 
+	// the number of bytes that have been index
 	while (1)
 	{
-		c = fgetc(fp);
+		int c = 0;
 
-		if (c == EOF || (i >= (N - 1)))
+		c = fgetc(fp);
+		if (c == EOF || (index >= (capacity - 1)))
 		{
 			// last place in buffer or file
-			buff[i++] = '\0';
+			buff[index++] = '\0';
 			break;
 		}
 		else
 		{
-			buff[i++] = c;
+			buff[index++] = c;
 		}
 	}
 
 	fclose(fp);
-	return i;
+	return index;
 }
 
 int main()
@@ -41,7 +35,7 @@ int main()
 	// printf("Hello world\r\n");
 
 	// Read file into a static buffer
-	int capacity = 5;
+	int capacity = 1000000; // 1mb
 	char buffer[capacity];
 	int written = read_file(buffer, capacity, "main.c");
 
