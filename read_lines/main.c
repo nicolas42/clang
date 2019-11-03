@@ -21,7 +21,7 @@ int main()
 	while (fgets(line, 100, fp) != NULL){
 
 		for (int i = 0; i < strlen(line); i++){
-			if (is_newline){
+			if (is_newline(line[i])){
 				line[i] = '\0';
 			}
 		}
@@ -36,7 +36,7 @@ int main()
 
 
 	for (int i = 0; i < length_offsets; i++){
-		printf("{%s}", buffer + offsets[i]);
+		printf("\"%s\"\r\n", buffer + offsets[i]);
 	}
 
 	return 0;
