@@ -1,4 +1,5 @@
-gcc -c -Wall -pedantic *.c
-gcc -Wall -pedantic *.o
+gcc -c -Wall -pedantic -std=c99 *.c
+gcc -Wall -pedantic -std=c99 *.o
 rm *.o
 ./a.out
+rm a.out

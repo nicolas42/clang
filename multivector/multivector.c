@@ -1,74 +1,39 @@
 #include "multivector.h"
 
-void multivector_product(double *c, double *a, double *b){
+// #define MULTIVECTOR_LENGTH 200
+// void multivector_print(char *str, MULTIVECTOR *v){
+// 	snprintf(str, MULTIVECTOR_LENGTH, "[%.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f]", 
+// 			v->e0, v->e1, v->e2, v->e3, v->e23, v->e31, v->e12, v->e123);
+// }
+
+void multivector_init(MULTIVECTOR *a){
+	a->e0 = 0; a->e1 = 0; a->e2 = 0; a->e3 = 0; a->e23 = 0; a->e31 = 0; a->e12 = 0; a->e123 = 0; 
+}
+
+void multivector_product(MULTIVECTOR *c, MULTIVECTOR *a_arg, MULTIVECTOR *b_arg){
+	MULTIVECTOR a = *a_arg;
+	MULTIVECTOR b = *b_arg;
 	// I've probably made a mistake somewhere o_o
-	c[0] = a[0]*b[0] + a[1]*b[1] + a[2]*b[2] + a[3]*b[3] - a[4]*b[4] - a[5]*b[5] - a[6]*b[6] - a[7]*b[7];
-
-	c[1] = a[0]*b[1] + a[1]*b[0] - a[2]*b[6] + a[6]*b[2] + a[3]*b[5] - a[5]*b[3] + a[7]*b[4] + a[4]*b[7];
-	c[2] = a[0]*b[2] + a[2]*b[0] + a[1]*b[6] - a[6]*b[1] - a[3]*b[4] + a[4]*b[3] - a[7]*b[5] - a[5]*b[7];
-	c[3] = a[0]*b[3] + a[3]*b[0] - a[1]*b[5] + a[5]*b[1] + a[2]*b[4] - a[4]*b[2] + a[7]*b[6] + a[6]*b[7];
-
-	c[4] = a[4]*b[0] + a[0]*b[4] + a[2]*b[3] - a[3]*b[2] + a[6]*b[5] - a[5]*b[6] + a[7]*b[1] + a[1]*b[7];
-	c[5] = a[5]*b[0] + a[0]*b[5] + a[3]*b[1] - a[1]*b[3] + a[4]*b[6] - a[6]*b[4] + a[7]*b[2] + a[2]*b[7];
-	c[6] = a[6]*b[0] + a[0]*b[6] + a[1]*b[2] - a[2]*b[1] + a[5]*b[4] - a[4]*b[5] + a[7]*b[3] + a[3]*b[7];
-
-	c[7] = a[0]*b[7] + a[7]*b[0] + a[1]*b[4] + a[4]*b[1] + a[2]*b[5] + a[5]*b[2] + a[3]*b[6] + a[6]*b[3];
+	c->e0 	= a.e0*b.e0 	+ a.e1*b.e1 	+ a.e2*b.e2 	+ a.e3*b.e3 	- a.e23*b.e23 	- a.e31*b.e31 	- a.e12*b.e12 	- a.e123*b.e123;
+	c->e1 	= a.e0*b.e1 	+ a.e1*b.e0 	- a.e2*b.e12 	+ a.e12*b.e2 	+ a.e3*b.e31 	- a.e31*b.e3 	+ a.e123*b.e23 	+ a.e23*b.e123;
+	c->e2 	= a.e0*b.e2 	+ a.e2*b.e0 	+ a.e1*b.e12 	- a.e12*b.e1 	- a.e3*b.e23 	+ a.e23*b.e3 	- a.e123*b.e31 	- a.e31*b.e123;
+	c->e3 	= a.e0*b.e3 	+ a.e3*b.e0 	- a.e1*b.e31 	+ a.e31*b.e1 	+ a.e2*b.e23 	- a.e23*b.e2 	+ a.e123*b.e12 	+ a.e12*b.e123;
+	c->e23 	= a.e23*b.e0 	+ a.e0*b.e23 	+ a.e2*b.e3 	- a.e3*b.e2 	+ a.e12*b.e31 	- a.e31*b.e12 	+ a.e123*b.e1 	+ a.e1*b.e123;
+	c->e31 	= a.e31*b.e0 	+ a.e0*b.e31 	+ a.e3*b.e1 	- a.e1*b.e3 	+ a.e23*b.e12 	- a.e12*b.e23 	+ a.e123*b.e2 	+ a.e2*b.e123;
+	c->e12 	= a.e12*b.e0 	+ a.e0*b.e12 	+ a.e1*b.e2 	- a.e2*b.e1 	+ a.e31*b.e23 	- a.e23*b.e31 	+ a.e123*b.e3 	+ a.e3*b.e123;
+	c->e123	= a.e0*b.e123 	+ a.e123*b.e0 	+ a.e1*b.e23 	+ a.e23*b.e1 	+ a.e2*b.e31 	+ a.e31*b.e2 	+ a.e3*b.e12 	+ a.e12*b.e3;
 
 }
 
-void multivector_print(double *a){
-	printf("[%.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f]", a[0], a[1], a[2], a[3], a[4], a[5], a[6], a[7]);
+void multivector_rotate(MULTIVECTOR *Rab, MULTIVECTOR *v, MULTIVECTOR *a, MULTIVECTOR *b){
+
+	MULTIVECTOR ab, ba, v2;
+	multivector_init(&ab); multivector_init(&ba); multivector_init(&v2);
+
+	multivector_product(&ab, a, b);
+	multivector_product(&ba, b, a);
+
+	multivector_product(&v2, v, &ab);
+	multivector_product(Rab, &ba, &v2);
 }
 
-void multivector_add(double *c, double *a, double *b){
-	int i;
-	for (i = 0; i < 8; i += 1){
-		c[i] = a[i] + b[i];
-	}
-}
-
-void multivector_negate(double *c, double *a){
-	int i;
-	for (i = 0; i < 8; i += 1){
-		c[i] = - a[i];
-	}
-}
-
-void multivector_init(double *a){
-	int i;
-	for (i = 0; i < 8; i += 1){
-		a[i] = 0;
-	}
-}
-
-void multivector_copy(double *a, double *b){
-	int i;
-	for (i = 0; i < 8; i += 1){
-		a[i] = b[i];
-	}
-}
-
-// Rotate v by twice the angle between a and b
-// And scale by |ab|^2 ???
-void multivector_rotate(double *Rab, double *v, double *a, double *b){
-
-	double ab[8], ba[8], v2[8];
-	multivector_init(ab); multivector_init(ba); multivector_init(v2);
-
-	multivector_product(ab, a, b);
-	multivector_product(ba, b, a);
-
-	multivector_product(v2, v, ab);
-	multivector_product(Rab, ba, v2);
-}
-
-
-String* multivector_string_add(String* a, double* mv){
-
-	char b[8 * (2 + 0) + 11]; // 8 floating point values with 11 addition spaces
-	snprintf(b, sizeof(b), "[%.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f]", 
-			mv[0], mv[1], mv[2], mv[3], mv[4], mv[5], mv[6], mv[7]);
-	// %[flags][width][.precision][length]specifier
-	string_add(a, b);
-	return a;
-}
