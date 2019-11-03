@@ -35,11 +35,11 @@ int main(int argc, char **argv)
 		return 1;
 		break;
 	case 2:
-		pigeon_holes = atoi(argv[1]); 
+		pigeons = atoi(argv[1]); 
 		break;
 	case 3:
-		pigeon_holes = atoi(argv[1]);
-		pigeons = atoi(argv[2]); 
+		pigeons = atoi(argv[1]); 
+		pigeon_holes = atoi(argv[2]);
 		break;
 	default:
 		usage(); 
@@ -49,7 +49,7 @@ int main(int argc, char **argv)
 
 	P = chance_of_collisions(pigeon_holes, pigeons);
 
-	printf("chance-of-collision slots: %.0f items: %.0f probability: %f\r\n", pigeon_holes, pigeons, P);
+	printf("chance-of-collision of %.0f items in %.0f positions: %f\r\n", pigeons, pigeon_holes, P);
 
 
 	return 0;
