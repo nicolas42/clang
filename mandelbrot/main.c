@@ -2,11 +2,15 @@
 // push(){git add . && git commit -m $1 && git push}
 
 #include <stdio.h>
-// #include <stdlib.h>
+#include <stdlib.h>
 // #include <string.h>
 
+void usage(void){
+	printf("mandelbrot [WIDTH] [HEIGHT]\r\n");
+}
 
 int main(int argc, char** argv){
+
 
     static unsigned char black[4] = {0, 0, 0, 255};
     static unsigned char white[4] = {255, 255, 255, 255};
@@ -16,6 +20,23 @@ int main(int argc, char** argv){
     int y;
     int WIDTH = 1000; // pixels
     int HEIGHT = 1000;
+
+
+    switch (argc){
+	case 1:
+		usage(); 
+        printf("Making 1000x1000 mandelbrot image\r\n");
+		break;
+	case 3:
+		WIDTH = atoi(argv[1]); 
+		HEIGHT = atoi(argv[2]);
+		break;
+	default:
+		usage(); 
+		return 1;
+		break;
+	}
+
 
 	// int data_length = 4 * WIDTH * HEIGHT;
 	// char data[data_length];
