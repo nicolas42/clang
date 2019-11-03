@@ -20,6 +20,11 @@ int main()
 	char line[100];
 	while (fgets(line, 100, fp) != NULL){
 
+		for (int i = 0; i < strlen(line); i++){
+			if (is_newline){
+				line[i] = '\0';
+			}
+		}
 		strcpy(buffer + length_buffer, line);
 		offsets[length_offsets++] = length_buffer;
 
