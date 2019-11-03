@@ -1,5 +1,4 @@
-// gcc mandelbrot.c && ./a.out
-// push(){git add . && git commit -m $1 && git push}
+// Draw a black and white mandelbrot image in file mandelbrot.ppm
 
 #include <stdio.h>
 #include <stdlib.h>
