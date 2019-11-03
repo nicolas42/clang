@@ -25,14 +25,26 @@ int main(int argc, char **argv)
 	INTARRAY arr;
 	intarray_init(&arr);
 
-	clock_t dt = 0;
-	clock_t start_time = clock();
+	// clock_t dt = 0;
+	// clock_t start_time = clock();
 
-	for ( int i = 2; dt < 1; i++ ){
+	int MAX_PRIME = 1000;
+
+    switch (argc){
+	case 2:
+		MAX_PRIME = atoi(argv[1]); 
+		break;
+	default:
+		// usage();
+		printf("generate-primes [MAX_PRIME]\r\n");
+		break;
+	}
+
+
+	for ( int i = 2; i < MAX_PRIME; i++ ){
 		if ( is_prime(i) ){
 			intarray_add(&arr, i);
-			dt = (clock()-start_time)/CLOCKS_PER_SEC;
-
+			// dt = (clock()-start_time)/CLOCKS_PER_SEC;
 		}
 	}
 	

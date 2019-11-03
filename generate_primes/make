@@ -1,5 +1,5 @@
 gcc -c -Wall -pedantic *.c
 gcc -Wall -pedantic *.o
 rm *.o
-./a.out
+./a.out $1
 rm a.out
