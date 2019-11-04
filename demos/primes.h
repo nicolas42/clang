@@ -2,12 +2,12 @@
 #define PRIMES_H
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <inttypes.h>
-#include <time.h>
+#include "array.h"
 
-int64_t prime_factors(int64_t arg);
-int primes_make(void);
+int is_prime(int a);
+int make_primes(ARRAY* primes, int primes_length);
 
 #endif
+
+
+
