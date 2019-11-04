@@ -21,11 +21,7 @@ int chance_of_collisions(double* probability, double items, double slots){
 	return 0;
 }
 
-// void usage(void){
-// 	printf("Usage: chance-of-collision [slots] [items]\r\n");
-// }
-
-int main(int argc, char **argv)
+int main1(int argc, char **argv)
 {
 
 	// printf("Hello World!\r\n");
@@ -96,6 +92,12 @@ int main(int argc, char **argv)
 	puts("Counting ticks...");
 	count_ticks(5);
 
+	return 0;
+}
+
+int main(int argc, char **argv){
+
+	main1(argc, argv);
 	return 0;
 }
 

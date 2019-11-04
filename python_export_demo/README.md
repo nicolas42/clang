@@ -1,5 +1,10 @@
-The ctypes python package can be used to insert c code into python :)
+The ctypes python package can be used to insert c code into python :).  There's some examples of how to do this in the darknet repo.
 
+gcc -shared -o libhello.so -fPIC hello.c
+
+The above line will make a shared object which can be imported into python using its ctypes module.
+
+---------------------------------------
 
 from https://stackoverflow.com/questions/14884126/build-so-file-from-c-file-using-gcc-command-line
 
