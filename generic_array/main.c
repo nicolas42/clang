@@ -1,40 +1,5 @@
-#include <stdio.h>
-#include <stdlib.h>
 
-typedef struct {
-	double* data;
-	int length;
-	int capacity;
-	int index;
-} ARRAY;
-
-ARRAY* array_init(ARRAY* a){
-	a->length = 0;
-	a->capacity = 2;
-	a->data = malloc(a->capacity * sizeof(double));
-	return a;
-}
-
-ARRAY* array_add(ARRAY* a, double b){
-	
-	// reallocate if full
-	if (a->length == a->capacity){
-		a->capacity = 2 * a->capacity;
-		a->data = realloc(a->data, a->capacity * sizeof(double));
-		puts("Realloc! ");
-	}
-	a->data[a->length] = b;
-	a->length++;
-	return a;
-}
-
-ARRAY* array_clear(ARRAY* a){
-	for (int i = 0; i < a->length; i++){
-		a->data[i] = (uint64_t)0;
-	}
-	a->length = 0;
-	return a;
-}
+#include "array.h"
 
 int main(int argc, char** argv){
 

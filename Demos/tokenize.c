@@ -37,33 +37,33 @@ int isnewline(int a){
 	return (a == '\n' || a == '\r');
 }
 
-int main()
-{
+// int main()
+// {
 
-	int max_size = 1000000; /* 1mb */
-	char a[max_size];
+// 	int max_size = 1000000; /* 1mb */
+// 	char a[max_size];
 	
-	FILE *fp;
-	fp = fopen("main.c", "r");
-    fread(a, max_size, 1, fp);
-	fclose(fp);
+// 	FILE *fp;
+// 	fp = fopen("main.c", "r");
+//     fread(a, max_size, 1, fp);
+// 	fclose(fp);
 
-	// char ca[max_size];
-	// strcpy(ca, a);
+// 	// char ca[max_size];
+// 	// strcpy(ca, a);
 
-	// // ======TOKENIZE +=========
+// 	// // ======TOKENIZE +=========
 
-	int t[1000];
-	int lt = 0;
+// 	int t[1000];
+// 	int lt = 0;
 
-	tokenize(t, &lt, a, isspace);
+// 	tokenize(t, &lt, a, isspace);
 
-	for (int i = 0; i < lt; i++){
-		printf("[%s]\n", a + t[i]);
-	}
-	puts("\n");
+// 	for (int i = 0; i < lt; i++){
+// 		printf("[%s]\n", a + t[i]);
+// 	}
+// 	puts("\n");
 
-	// printf("%s", ca);
+// 	// printf("%s", ca);
 
-	return 0;
-}
+// 	return 0;
+// }
