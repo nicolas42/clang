@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 if (1){
 
 	LIB_MULTIVECTOR m; lib_multivector_init(&m);
-	// LIB_MULTIVECTOR m = lib_multivector; // can be const, faster???
+	// const LIB_MULTIVECTOR m = lib_multivector;
 
 	// Multivector Rotation
 	const double PI = 3.14159265359;
