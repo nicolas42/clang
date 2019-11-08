@@ -1,21 +1,5 @@
-/*g++ multivector.cpp && ./a.out */
-
-// #include <stdio.h>
-// #include <math.h>
 #include "multivector.h"
 
-// typedef struct {
-// 	double e0, x, y, z, yz, zy, xy, xyz;
-// } MULTIVECTOR;
-
-// void lib_multivector_init(LIB_MULTIVECTOR *a){
-// 	a->init = multivector_init;
-// 	a->product = multivector_product;
-// 	a->rotate = multivector_rotate;
-// 	a->print = multivector_print;
-// 	a->printv = multivector_printv;
-// 	a->str = multivector_str;
-// }
 
 void init(MULTIVECTOR *a){
 	a->e0 = 0; a->x = 0; a->y = 0; a->z = 0; a->yz = 0; a->zy = 0; a->xy = 0; a->xyz = 0; 
@@ -69,44 +53,17 @@ const LIB_MULTIVECTOR multivector = {
 	.str = str
 };
 
-// int main(int argc, char **argv)
-// {
-// 	using namespace multivector;
+/*
+int main(int argc, char **argv)
+{
+	const double PI = 3.14159265359;
+	double angle = PI/4;
+	MULTIVECTOR v = {0,1,0,0}, a = {0,1,0,0}, b = {0,cos(angle), sin(angle)}, Rab = {0};
+	multivector.rotate(&Rab, v, a, b);
+	printf("Rotate v by twice the angle between a and b\r\n");
+	multivector.printv(v); multivector.printv(a); multivector.printv(b); multivector.printv(Rab); 
+	printf("\r\n");
 
-// 	// Allocate, initialize to zero, define constants
-// 	const double PI = 3.14159265359;
-// 	double angle = PI/4;
-// 	MULTIVECTOR ab = {0}, ba = {0}, Rab = {0}, tmp = {0};
-	
-// 	// arguments
-// 	MULTIVECTOR v = {0,1}, a = {0,1}, b = {0,cos(angle), sin(angle)};
-// 	rotate(&Rab,v,a,b);
-	
-// 	product(&ab, a, b);
-// 	product(&ba, b, a);
-// 	product(&tmp, v, ab);
-// 	product(&Rab, ba, tmp);
-
-
-// 	printf("Rotate v by twice the angle between a and b\r\n\r\n");
-
-// 	printf("v,a,b,Rab\r\n");
-// 	printv(v);	printv(a);	printv(b);	printv(Rab);
-// 	printf("\r\n");
-
-// 	printf("ab,ba,tmp,Rab\r\n");
-// 	print(ab);	print(ba);	print(tmp);	print(Rab);
-// 	printf("\r\n");
-
-// 	printf("i,j,k,ij,ijk\r\n");
-// 	MULTIVECTOR i={0,1}, j={0,0,1}, k={0,0,0,1},jk={0}, ij={0}, ki={0}, ijk={0};
-// 	product(&jk, j,k); 
-// 	product(&ij, i,j);
-// 	product(&ki, k,i);
-// 	product(&ijk, ij,k);
-	
-// 	print(i); print(j);print(k);print(ij); print(jk); print(ki); print(ijk);
-// 	printf("\r\n");
-
-// 	return 0;
-// }
+	return 0;
+}
+*/

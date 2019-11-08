@@ -69,6 +69,8 @@ int main(int argc, char **argv)
 	// void (*rotate)(MULTIVECTOR *Rab, MULTIVECTOR v, MULTIVECTOR a, MULTIVECTOR b);
 	// rotate = multivector.rotate;
 	
+	// LIB_MULTIVECTOR mv = multivector;
+
 	const double PI = 3.14159265359;
 	double angle = PI/4;
 	MULTIVECTOR v = {0,1,0,0}, a = {0,1,0,0}, b = {0,cos(angle), sin(angle)}, Rab = {0};
