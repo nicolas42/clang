@@ -7,22 +7,22 @@
 namespace multivector {
 
 	typedef struct {
-		double e0, e1, e2, e3, e23, e31, e12, e123;
+		double e0, x, y, z, yz, zy, xy, xyz;
 	} MULTIVECTOR;
 
 	void init(MULTIVECTOR *a){
-		a->e0 = 0; a->e1 = 0; a->e2 = 0; a->e3 = 0; a->e23 = 0; a->e31 = 0; a->e12 = 0; a->e123 = 0; 
+		a->e0 = 0; a->x = 0; a->y = 0; a->z = 0; a->yz = 0; a->zy = 0; a->xy = 0; a->xyz = 0; 
 	}
 
 	void product(MULTIVECTOR *c, MULTIVECTOR a, MULTIVECTOR b){
-		c->e0 	= a.e0*b.e0 	+ a.e1*b.e1 	+ a.e2*b.e2 	+ a.e3*b.e3 	- a.e23*b.e23 	- a.e31*b.e31 	- a.e12*b.e12 	- a.e123*b.e123;
-		c->e1 	= a.e0*b.e1 	+ a.e1*b.e0 	- a.e2*b.e12 	+ a.e12*b.e2 	+ a.e3*b.e31 	- a.e31*b.e3 	- a.e123*b.e23 	+ a.e23*b.e123;
-		c->e2 	= a.e0*b.e2 	+ a.e2*b.e0 	+ a.e1*b.e12 	- a.e12*b.e1 	- a.e3*b.e23 	+ a.e23*b.e3 	- a.e123*b.e31 	- a.e31*b.e123;
-		c->e3 	= a.e0*b.e3 	+ a.e3*b.e0 	- a.e1*b.e31 	+ a.e31*b.e1 	+ a.e2*b.e23 	- a.e23*b.e2 	- a.e123*b.e12 	- a.e12*b.e123;
-		c->e23 	= a.e23*b.e0 	+ a.e0*b.e23 	+ a.e2*b.e3 	- a.e3*b.e2 	+ a.e12*b.e31 	- a.e31*b.e12 	+ a.e123*b.e1 	+ a.e1*b.e123;
-		c->e31 	= a.e31*b.e0 	+ a.e0*b.e31 	+ a.e3*b.e1 	- a.e1*b.e3 	+ a.e23*b.e12 	- a.e12*b.e23 	+ a.e123*b.e2 	+ a.e2*b.e123;
-		c->e12 	= a.e12*b.e0 	+ a.e0*b.e12 	+ a.e1*b.e2 	- a.e2*b.e1 	+ a.e31*b.e23 	- a.e23*b.e31 	+ a.e123*b.e3 	+ a.e3*b.e123;
-		c->e123	= a.e0*b.e123 	+ a.e123*b.e0 	+ a.e1*b.e23 	+ a.e23*b.e1 	+ a.e2*b.e31 	+ a.e31*b.e2 	+ a.e3*b.e12 	+ a.e12*b.e3;
+		c->e0 	= a.e0*b.e0 	+ a.x*b.x 	+ a.y*b.y 	+ a.z*b.z 	- a.yz*b.yz 	- a.zy*b.zy 	- a.xy*b.xy 	- a.xyz*b.xyz;
+		c->x 	= a.e0*b.x 	+ a.x*b.e0 	- a.y*b.xy 	+ a.xy*b.y 	+ a.z*b.zy 	- a.zy*b.z 	- a.xyz*b.yz 	+ a.yz*b.xyz;
+		c->y 	= a.e0*b.y 	+ a.y*b.e0 	+ a.x*b.xy 	- a.xy*b.x 	- a.z*b.yz 	+ a.yz*b.z 	- a.xyz*b.zy 	- a.zy*b.xyz;
+		c->z 	= a.e0*b.z 	+ a.z*b.e0 	- a.x*b.zy 	+ a.zy*b.x 	+ a.y*b.yz 	- a.yz*b.y 	- a.xyz*b.xy 	- a.xy*b.xyz;
+		c->yz 	= a.yz*b.e0 	+ a.e0*b.yz 	+ a.y*b.z 	- a.z*b.y 	+ a.xy*b.zy 	- a.zy*b.xy 	+ a.xyz*b.x 	+ a.x*b.xyz;
+		c->zy 	= a.zy*b.e0 	+ a.e0*b.zy 	+ a.z*b.x 	- a.x*b.z 	+ a.yz*b.xy 	- a.xy*b.yz 	+ a.xyz*b.y 	+ a.y*b.xyz;
+		c->xy 	= a.xy*b.e0 	+ a.e0*b.xy 	+ a.x*b.y 	- a.y*b.x 	+ a.zy*b.yz 	- a.yz*b.zy 	+ a.xyz*b.z 	+ a.z*b.xyz;
+		c->xyz	= a.e0*b.xyz 	+ a.xyz*b.e0 	+ a.x*b.yz 	+ a.yz*b.x 	+ a.y*b.zy 	+ a.zy*b.y 	+ a.z*b.xy 	+ a.xy*b.z;
 	}
 
 	void rotate(MULTIVECTOR *Rab, MULTIVECTOR v, MULTIVECTOR a, MULTIVECTOR b){
@@ -38,16 +38,16 @@ namespace multivector {
 
 	void print(MULTIVECTOR v){
 		printf("[%.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f]\r\n", 
-				v.e0, v.e1, v.e2, v.e3, v.e23, v.e31, v.e12, v.e123);	
+				v.e0, v.x, v.y, v.z, v.yz, v.zy, v.xy, v.xyz);	
 	}
 
 	void printv(MULTIVECTOR v){
-		printf("[%.2f %.2f %.2f]\r\n", v.e1, v.e2, v.e3);	
+		printf("[%.2f %.2f %.2f]\r\n", v.x, v.y, v.z);	
 	}
 
 	char* str(char* buf, MULTIVECTOR v){
 		sprintf(buf, "[%.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f]\r\n", 
-				v.e0, v.e1, v.e2, v.e3, v.e23, v.e31, v.e12, v.e123);	
+				v.e0, v.x, v.y, v.z, v.yz, v.zy, v.xy, v.xyz);	
 				
 		return buf;
 	}
@@ -73,27 +73,25 @@ int main(int argc, char **argv)
 	product(&Rab, ba, tmp);
 
 
-	printf("Rotate v by twice the angle between a and b\r\n");
-	puts("v,a,b,Rab");
-	print(v);
-	print(a);
-	print(b);
-	print(Rab);
-	
-	printf("\r\n\r\n");
-	printf("ab,ba,tmp,Rab,ij,ijk\r\n");
-	print(ab);
-	print(ba);
-	print(tmp);
-	print(Rab);
+	printf("Rotate v by twice the angle between a and b\r\n\r\n");
 
-	MULTIVECTOR i={0,1}, j={0,0,1}, k={0,0,0,1},ij={0}, ijk={0};	
+	printf("v,a,b,Rab\r\n");
+	printv(v);	printv(a);	printv(b);	printv(Rab);
+	printf("\r\n");
+
+	printf("ab,ba,tmp,Rab\r\n");
+	print(ab);	print(ba);	print(tmp);	print(Rab);
+	printf("\r\n");
+
+	printf("i,j,k,ij,ijk\r\n");
+	MULTIVECTOR i={0,1}, j={0,0,1}, k={0,0,0,1},jk={0}, ij={0}, ki={0}, ijk={0};
+	product(&jk, j,k); 
 	product(&ij, i,j);
+	product(&ki,k,i);
 	product(&ijk, ij,k);
 	
-	char b1[200], b2[200];
-	printf("%s %s\r\n", str(b1,ij), str(b2,ijk));
-	
+	print(i); print(j);print(k);print(ij); print(jk); print(ki); print(ijk);
+	printf("\r\n");
 
 	return 0;
 }
