@@ -1,8 +1,8 @@
 /*g++ multivector.cpp && ./a.out */
 
-#include <stdio.h>
-#include <math.h>
-// #include "multivector.h"
+// #include <stdio.h>
+// #include <math.h>
+#include "multivector.h"
 
 namespace multivector {
 

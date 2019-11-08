@@ -3,7 +3,6 @@
 
 #include <stdio.h>
 #include <math.h>
-// #include "multivector.h"
 
 namespace multivector {
 	typedef struct {
