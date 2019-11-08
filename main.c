@@ -21,10 +21,19 @@ int chance_of_collisions(double* probability, double items, double slots){
 	return 0;
 }
 
-int main1(int argc, char **argv)
+int main(int argc, char **argv)
 {
 
-	// printf("Hello World!\r\n");
+
+
+	// Multivector Rotation
+	const double PI = 3.14159265359;
+	double angle = PI/4;
+	MULTIVECTOR v = {0,1,0,0}, a = {0,1,0,0}, b = {0,cos(angle), sin(angle)}, Rab = {0};
+	multivector_rotate(&Rab, &v, &a, &b);
+	printf("Rotate v by twice the angle between a and b\r\n");
+	vector_print(&v); vector_print(&a); vector_print(&b); vector_print(&Rab); 
+
 
 /*
 	// Get Arguments
@@ -36,6 +45,7 @@ int main1(int argc, char **argv)
 	}
 */
 
+	/*
 
 	// Collision Probability
 	double probability = -1, items = 20, slots = 365;
@@ -50,16 +60,7 @@ int main1(int argc, char **argv)
 	printf("Making %dx%d pixel mandelbrot image at %.2fx%.2f with size %.2fx%.2f...\r\n", pixel_width, pixel_height, xcenter, ycenter, width, height);		
 
 
-	// Multivector Rotation
-	const double PI = 3.14159265359;
-	double angle = PI/4;
-	MULTIVECTOR v = {1,0,0}, a = {1,0,0}, b = {cos(angle), sin(angle)}, Rab = {0};
-	multivector_rotate(&Rab, &v, &a, &b);
-	printf("Rotate v by twice the angle between a and b\r\n");
-	vector_print(&v); vector_print(&a); vector_print(&b); vector_print(&Rab); 
-
 	// Tokenizer - read file, tokenize, then print
-
 	char buffer[1000000];
 	FILE* fp = fopen("main.c", "r");
     fread(buffer, 1000000, 1, fp);
@@ -86,13 +87,8 @@ int main1(int argc, char **argv)
 	// Count Ticks
 	puts("Counting ticks...");
 	count_ticks(5);
-
+*/
 	return 0;
 }
 
-int main(int argc, char **argv){
-
-	main1(argc, argv);
-	return 0;
-}
 

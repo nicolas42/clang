@@ -14,6 +14,7 @@ namespace multivector {
 	void product(MULTIVECTOR *c, MULTIVECTOR a, MULTIVECTOR b);
 	void rotate(MULTIVECTOR *Rab, MULTIVECTOR v, MULTIVECTOR a, MULTIVECTOR b);
 	void print(MULTIVECTOR v);
+	void printv(MULTIVECTOR v);
 }
 
 #endif
