@@ -10,7 +10,7 @@
 #include "interface.h"
 
 /* Also known as the birthday paradox */
-int mymath_chance_of_collisions(double* probability, double items, double slots){
+int chance_of_collisions(double* probability, double items, double slots){
 
 	double p = 1; // probability of no collision
 	
@@ -20,6 +20,14 @@ int mymath_chance_of_collisions(double* probability, double items, double slots)
 	}
 	*probability = 1 - p;
 	return 0;
+}
+
+double min(double a, double b){
+	if (a < b){
+		return a;
+	} else {
+		return b;
+	}
 }
 
 int main(int argc, char **argv)
@@ -35,62 +43,72 @@ int main(int argc, char **argv)
 	// Get Arguments
 	int len_args = argc-1;
 	double args[len_args];
-	
+
 	for (int i = 1; i < argc; i++)
 	{
 		char* ptr;
 		args[i-1] = strtod(argv[i], &ptr);	
 	}
-
+	printf("Arguments\r\n");
 	for(size_t i = 0; i < len_args; ++i)
 	{
 		printf("%f ", args[i]);
 	}
+	printf("\r\n");
 
 
-if (1){
+	// Multivector Library
+	// By default multivector.h imports a type MULTIVECTOR 
+	// and an interface multivector (a struct full of functions)
+	// the library can be renamed. and functions can be imported directly into main's namespace
 
-	LIB_MULTIVECTOR m; lib_multivector_init(&m);
-	// const LIB_MULTIVECTOR m = lib_multivector;
+	// rename library
+	// LIB_MULTIVECTOR mv = multivector;
 
-	// Multivector Rotation
+	// import function(s) into the namespace
+	// void (*rotate)(MULTIVECTOR *Rab, MULTIVECTOR v, MULTIVECTOR a, MULTIVECTOR b);
+	// rotate = multivector.rotate;
+	
 	const double PI = 3.14159265359;
 	double angle = PI/4;
 	MULTIVECTOR v = {0,1,0,0}, a = {0,1,0,0}, b = {0,cos(angle), sin(angle)}, Rab = {0};
-	m.rotate(&Rab, v, a, b);
+	multivector.rotate(&Rab, v, a, b);
 	printf("Rotate v by twice the angle between a and b\r\n");
-	m.printv(v); m.printv(a); m.printv(b); m.printv(Rab); 
+	multivector.printv(v); multivector.printv(a); multivector.printv(b); multivector.printv(Rab); 
+	printf("\r\n");
 
-}
-/*
 
-	// Collision Probability
+	// Calculate the probability of a collision (birthday paradox)
 	double probability = -1, items = 20, slots = 365;
 	chance_of_collisions(&probability, items, slots);
 	printf("chance-of-collision of %.0f items in %.0f positions: %f\r\n", items, slots, probability);
+	printf("\r\n");
 
 
-	// Mandelbrot Image Generation
+	// Make Mandelbrot Image
 	int pixel_width = 200, pixel_height = 200;
 	double xcenter = 0, ycenter = 0, width = 4, height = 4;
     mandelbrot(pixel_width, pixel_height, xcenter, ycenter, width, height);
 	printf("Making %dx%d pixel mandelbrot image at %.2fx%.2f with size %.2fx%.2f...\r\n", pixel_width, pixel_height, xcenter, ycenter, width, height);		
+	printf("\r\n");
 
 
-	// Tokenizer - read file, tokenize, then print
+	// Tokenizer
+	// read file
 	char buffer[1000000];
 	FILE* fp = fopen("main.c", "r");
     fread(buffer, 1000000, 1, fp);
 	fclose(fp);
-
+	// make tokens
 	int tokens[1000000];
 	int tokens_length = 0;
-	tokenize(tokens, &tokens_length, buffer, isnewline);
-
-	for (int i = 0; i < tokens_length; i++){
-		printf("[%s]\r\n", buffer + tokens[i]);
+	tokenize(tokens, &tokens_length, buffer, isspace);
+	// print tokens
+	for (int i = 0; i < min(10, tokens_length); i++){
+		printf("[%s] ", buffer + tokens[i]);
 	}
-	puts("\n");
+	printf("\r\n");
+
 
 	// Make Primes
 	puts("Making primes...");
@@ -98,13 +116,15 @@ if (1){
 	array_init(&arr);
 	make_primes(&arr, 100);
 	array_printf(&arr, "%.0f ");
+	printf("\r\n");
 
 
 
 	// Count Ticks
 	puts("Counting ticks...");
 	count_ticks(5);
-*/
+	printf("\r\n");
+
 	return 0;
 }
 
