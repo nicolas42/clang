@@ -32,11 +32,11 @@ typedef struct {
 // extern const LIB_MULTIVECTOR lib_multivector;
 extern const LIB_MULTIVECTOR multivector;
 
-void init(MULTIVECTOR *a){
+static void init(MULTIVECTOR *a){
 	a->e0 = 0; a->x = 0; a->y = 0; a->z = 0; a->yz = 0; a->zy = 0; a->xy = 0; a->xyz = 0; 
 }
 
-void product(MULTIVECTOR *c, MULTIVECTOR a, MULTIVECTOR b){
+static void product(MULTIVECTOR *c, MULTIVECTOR a, MULTIVECTOR b){
 	c->e0 	= a.e0*b.e0 	+ a.x*b.x 	+ a.y*b.y 	+ a.z*b.z 	- a.yz*b.yz 	- a.zy*b.zy 	- a.xy*b.xy 	- a.xyz*b.xyz;
 	c->x 	= a.e0*b.x 	+ a.x*b.e0 	- a.y*b.xy 	+ a.xy*b.y 	+ a.z*b.zy 	- a.zy*b.z 	- a.xyz*b.yz 	+ a.yz*b.xyz;
 	c->y 	= a.e0*b.y 	+ a.y*b.e0 	+ a.x*b.xy 	- a.xy*b.x 	- a.z*b.yz 	+ a.yz*b.z 	- a.xyz*b.zy 	- a.zy*b.xyz;
@@ -47,7 +47,7 @@ void product(MULTIVECTOR *c, MULTIVECTOR a, MULTIVECTOR b){
 	c->xyz	= a.e0*b.xyz 	+ a.xyz*b.e0 	+ a.x*b.yz 	+ a.yz*b.x 	+ a.y*b.zy 	+ a.zy*b.y 	+ a.z*b.xy 	+ a.xy*b.z;
 }
 
-void rotate(MULTIVECTOR *Rab, MULTIVECTOR v, MULTIVECTOR a, MULTIVECTOR b){
+static void rotate(MULTIVECTOR *Rab, MULTIVECTOR v, MULTIVECTOR a, MULTIVECTOR b){
 
 	MULTIVECTOR ab, ba, v2;
 	init(&ab); init(&ba); init(&v2);
@@ -58,16 +58,16 @@ void rotate(MULTIVECTOR *Rab, MULTIVECTOR v, MULTIVECTOR a, MULTIVECTOR b){
 	product(Rab, ba, v2);
 }
 
-void print(MULTIVECTOR v){
+static void print(MULTIVECTOR v){
 	printf("[%.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f]\r\n", 
 			v.e0, v.x, v.y, v.z, v.yz, v.zy, v.xy, v.xyz);	
 }
 
-void printv(MULTIVECTOR v){
+static void printv(MULTIVECTOR v){
 	printf("[%.2f %.2f %.2f]\r\n", v.x, v.y, v.z);	
 }
 
-char* str(char* buf, MULTIVECTOR v){
+static char* str(char* buf, MULTIVECTOR v){
 	sprintf(buf, "[%.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f]\r\n", 
 			v.e0, v.x, v.y, v.z, v.yz, v.zy, v.xy, v.xyz);	
 			
