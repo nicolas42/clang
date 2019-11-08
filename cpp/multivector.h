@@ -6,7 +6,7 @@
 
 namespace multivector {
 	typedef struct {
-		double e0, e1, e2, e3, e23, e31, e12, e123;
+		double e0, x, y, z, yz, zy, xy, xyz;
 	} MULTIVECTOR;
 
 	void init(MULTIVECTOR *a);

@@ -24,29 +24,32 @@ int chance_of_collisions(double* probability, double items, double slots){
 int main(int argc, char **argv)
 {
 
+	// Get Arguments
+	int len_args = argc-1;
+	double args[len_args];
+	
+	for (int i = 1; i < argc; i++)
+	{
+		char* ptr;
+		args[i-1] = strtod(argv[i], &ptr);	
+	}
+
+	for(size_t i = 0; i < len_args; ++i)
+	{
+		printf("%f ", args[i]);
+	}
+	
 
 
 	// Multivector Rotation
 	const double PI = 3.14159265359;
 	double angle = PI/4;
 	MULTIVECTOR v = {0,1,0,0}, a = {0,1,0,0}, b = {0,cos(angle), sin(angle)}, Rab = {0};
-	multivector_rotate(&Rab, &v, &a, &b);
+	multivector_rotate(&Rab, v, a, b);
 	printf("Rotate v by twice the angle between a and b\r\n");
-	vector_print(&v); vector_print(&a); vector_print(&b); vector_print(&Rab); 
-
+	multivector_printv(v); multivector_printv(a); multivector_printv(b); multivector_printv(Rab); 
 
 /*
-	// Get Arguments
-	double a[argc];
-	for (int i = 1; i < argc; i++)
-	{
-		char* ptr;
-		strtod(a[i], &ptr);	
-	}
-*/
-
-	/*
-
 	// Collision Probability
 	double probability = -1, items = 20, slots = 365;
 	chance_of_collisions(&probability, items, slots);

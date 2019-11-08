@@ -1,127 +1,94 @@
+/*g++ multivector.cpp && ./a.out */
+
+// #include <stdio.h>
+// #include <math.h>
 #include "multivector.h"
 
-// #define MULTIVECTOR_LENGTH 200
-// void multivector_print(char *str, MULTIVECTOR *v){
-// 	snprintf(str, MULTIVECTOR_LENGTH, "[%.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f]", 
-// 			v->e0, v->e1, v->e2, v->e3, v->e23, v->e31, v->e12, v->e123);
-// }
+// typedef struct {
+// 	double e0, x, y, z, yz, zy, xy, xyz;
+// } MULTIVECTOR;
 
 void multivector_init(MULTIVECTOR *a){
-	a->e0 = 0; a->e1 = 0; a->e2 = 0; a->e3 = 0; a->e23 = 0; a->e31 = 0; a->e12 = 0; a->e123 = 0; 
+	a->e0 = 0; a->x = 0; a->y = 0; a->z = 0; a->yz = 0; a->zy = 0; a->xy = 0; a->xyz = 0; 
 }
 
-void multivector_product(MULTIVECTOR *c, MULTIVECTOR *a_arg, MULTIVECTOR *b_arg){
-	MULTIVECTOR a = *a_arg;
-	MULTIVECTOR b = *b_arg;
-	// I've probably made a mistake somewhere o_o
-	c->e0 	= a.e0*b.e0 	+ a.e1*b.e1 	+ a.e2*b.e2 	+ a.e3*b.e3 	- a.e23*b.e23 	- a.e31*b.e31 	- a.e12*b.e12 	- a.e123*b.e123;
-	c->e1 	= a.e0*b.e1 	+ a.e1*b.e0 	- a.e2*b.e12 	+ a.e12*b.e2 	+ a.e3*b.e31 	- a.e31*b.e3 	+ a.e123*b.e23 	+ a.e23*b.e123;
-	c->e2 	= a.e0*b.e2 	+ a.e2*b.e0 	+ a.e1*b.e12 	- a.e12*b.e1 	- a.e3*b.e23 	+ a.e23*b.e3 	- a.e123*b.e31 	- a.e31*b.e123;
-	c->e3 	= a.e0*b.e3 	+ a.e3*b.e0 	- a.e1*b.e31 	+ a.e31*b.e1 	+ a.e2*b.e23 	- a.e23*b.e2 	+ a.e123*b.e12 	+ a.e12*b.e123;
-	c->e23 	= a.e23*b.e0 	+ a.e0*b.e23 	+ a.e2*b.e3 	- a.e3*b.e2 	+ a.e12*b.e31 	- a.e31*b.e12 	+ a.e123*b.e1 	+ a.e1*b.e123;
-	c->e31 	= a.e31*b.e0 	+ a.e0*b.e31 	+ a.e3*b.e1 	- a.e1*b.e3 	+ a.e23*b.e12 	- a.e12*b.e23 	+ a.e123*b.e2 	+ a.e2*b.e123;
-	c->e12 	= a.e12*b.e0 	+ a.e0*b.e12 	+ a.e1*b.e2 	- a.e2*b.e1 	+ a.e31*b.e23 	- a.e23*b.e31 	+ a.e123*b.e3 	+ a.e3*b.e123;
-	c->e123	= a.e0*b.e123 	+ a.e123*b.e0 	+ a.e1*b.e23 	+ a.e23*b.e1 	+ a.e2*b.e31 	+ a.e31*b.e2 	+ a.e3*b.e12 	+ a.e12*b.e3;
-
+void multivector_product(MULTIVECTOR *c, MULTIVECTOR a, MULTIVECTOR b){
+	c->e0 	= a.e0*b.e0 	+ a.x*b.x 	+ a.y*b.y 	+ a.z*b.z 	- a.yz*b.yz 	- a.zy*b.zy 	- a.xy*b.xy 	- a.xyz*b.xyz;
+	c->x 	= a.e0*b.x 	+ a.x*b.e0 	- a.y*b.xy 	+ a.xy*b.y 	+ a.z*b.zy 	- a.zy*b.z 	- a.xyz*b.yz 	+ a.yz*b.xyz;
+	c->y 	= a.e0*b.y 	+ a.y*b.e0 	+ a.x*b.xy 	- a.xy*b.x 	- a.z*b.yz 	+ a.yz*b.z 	- a.xyz*b.zy 	- a.zy*b.xyz;
+	c->z 	= a.e0*b.z 	+ a.z*b.e0 	- a.x*b.zy 	+ a.zy*b.x 	+ a.y*b.yz 	- a.yz*b.y 	- a.xyz*b.xy 	- a.xy*b.xyz;
+	c->yz 	= a.yz*b.e0 	+ a.e0*b.yz 	+ a.y*b.z 	- a.z*b.y 	+ a.xy*b.zy 	- a.zy*b.xy 	+ a.xyz*b.x 	+ a.x*b.xyz;
+	c->zy 	= a.zy*b.e0 	+ a.e0*b.zy 	+ a.z*b.x 	- a.x*b.z 	+ a.yz*b.xy 	- a.xy*b.yz 	+ a.xyz*b.y 	+ a.y*b.xyz;
+	c->xy 	= a.xy*b.e0 	+ a.e0*b.xy 	+ a.x*b.y 	- a.y*b.x 	+ a.zy*b.yz 	- a.yz*b.zy 	+ a.xyz*b.z 	+ a.z*b.xyz;
+	c->xyz	= a.e0*b.xyz 	+ a.xyz*b.e0 	+ a.x*b.yz 	+ a.yz*b.x 	+ a.y*b.zy 	+ a.zy*b.y 	+ a.z*b.xy 	+ a.xy*b.z;
 }
 
-void multivector_rotate(MULTIVECTOR *Rab, MULTIVECTOR *v, MULTIVECTOR *a, MULTIVECTOR *b){
+void multivector_rotate(MULTIVECTOR *Rab, MULTIVECTOR v, MULTIVECTOR a, MULTIVECTOR b){
 
 	MULTIVECTOR ab, ba, v2;
 	multivector_init(&ab); multivector_init(&ba); multivector_init(&v2);
 
 	multivector_product(&ab, a, b);
 	multivector_product(&ba, b, a);
-
-	multivector_product(&v2, v, &ab);
-	multivector_product(Rab, &ba, &v2);
+	multivector_product(&v2, v, ab);
+	multivector_product(Rab, ba, v2);
 }
 
-void multivector_print(MULTIVECTOR* v){
-	printf("[%.3f %.3f %.3f %.3f %.3f %.3f %.3f %.3f]\r\n", 
-			v->e0, v->e1, v->e2, v->e3, v->e23, v->e31, v->e12, v->e123);	
+void multivector_print(MULTIVECTOR v){
+	printf("[%.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f]\r\n", 
+			v.e0, v.x, v.y, v.z, v.yz, v.zy, v.xy, v.xyz);	
 }
 
-void vector_print(MULTIVECTOR* v){
-	printf("[%.3f %.3f %.3f]\r\n", v->e1, v->e2, v->e3);	
+void multivector_printv(MULTIVECTOR v){
+	printf("[%.2f %.2f %.2f]\r\n", v.x, v.y, v.z);	
 }
 
-void bivector_print(MULTIVECTOR* v){
-	printf("[%.3f %.3f %.3f]\r\n", v->e23, v->e31, v->e12);	
+char* multivector_str(char* buf, MULTIVECTOR v){
+	sprintf(buf, "[%.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f]\r\n", 
+			v.e0, v.x, v.y, v.z, v.yz, v.zy, v.xy, v.xyz);	
+			
+	return buf;
 }
-
-void vector_set(MULTIVECTOR *a, double v1, double v2, double v3){
-	a->e1 = v1; a->e2 = v2; a->e3 = v3;
-}
-
-void vector_copy(MULTIVECTOR *a, MULTIVECTOR* b){
-	a->e1 = b->e1; a->e2 = b->e2; a->e3 = b->e3; 
-}
-
-
-
-
-// #include <stdio.h>
-// // #include <stdlib.h>
-// // #include <assert.h>
-// // #include <string.h>
-// #include <math.h>
-// #include "multivector.h"
-
-// #define MULTIVECTOR_LENGTH 200
-// void multivector_serialize(char *str, MULTIVECTOR *v){
-// 	snprintf(str, MULTIVECTOR_LENGTH, "[%.3f %.3f %.3f %.3f %.3f %.3f %.3f %.3f]\r\n", 
-// 			v->e0, v->e1, v->e2, v->e3, v->e23, v->e31, v->e12, v->e123);
-// }
-
-// void multivector_print(MULTIVECTOR* v){
-// 	printf("[%.3f %.3f %.3f %.3f %.3f %.3f %.3f %.3f]\r\n", 
-// 			v->e0, v->e1, v->e2, v->e3, v->e23, v->e31, v->e12, v->e123);	
-// }
-
-// void vector_print(MULTIVECTOR* v){
-// 	printf("[%.3f %.3f %.3f]\r\n", v->e1, v->e2, v->e3);	
-// }
-
-// void bivector_print(MULTIVECTOR* v){
-// 	printf("[%.3f %.3f %.3f]\r\n", v->e23, v->e31, v->e12);	
-// }
-
-// void vector_set(MULTIVECTOR *a, double v1, double v2, double v3){
-// 	a->e1 = v1; a->e2 = v2; a->e3 = v3;
-// }
-
-// void vector_copy(MULTIVECTOR *a, MULTIVECTOR* b){
-// 	a->e1 = b->e1; a->e2 = b->e2; a->e3 = b->e3; 
-// }
-
 
 
 // int main(int argc, char **argv)
 // {
-// 	MULTIVECTOR v={0},a={0},b={0},ab={0},ba={0},Rab={0},tmp={0};
+// 	using namespace multivector;
+
+// 	// Allocate, initialize to zero, define constants
 // 	const double PI = 3.14159265359;
 // 	double angle = PI/4;
+// 	MULTIVECTOR ab = {0}, ba = {0}, Rab = {0}, tmp = {0};
+	
+// 	// arguments
+// 	MULTIVECTOR v = {0,1}, a = {0,1}, b = {0,cos(angle), sin(angle)};
+// 	multivector_rotate(&Rab,v,a,b);
+	
+// 	multivector_product(&ab, a, b);
+// 	multivector_product(&ba, b, a);
+// 	multivector_product(&tmp, v, ab);
+// 	multivector_product(&Rab, ba, tmp);
 
-// 	// vector_copy(&a, (MULTIVECTOR*){0,1,1});
-// 	vector_set(&v, 1,0,0);
-// 	vector_set(&a, 1,0,0);
-// 	vector_set(&b, cos(angle), sin(angle),0);
 
+// 	printf("Rotate v by twice the angle between a and b\r\n\r\n");
 
-// 	multivector_product(&ab, &a, &b);
-// 	multivector_product(&ba, &b, &a);
-// 	multivector_product(&tmp, &v, &ab);
-// 	multivector_product(&Rab, &ba, &tmp);
+// 	printf("v,a,b,Rab\r\n");
+// 	multivector_printv(v);	multivector_printv(a);	multivector_printv(b);	multivector_printv(Rab);
+// 	printf("\r\n");
 
+// 	printf("ab,ba,tmp,Rab\r\n");
+// 	multivector_print(ab);	multivector_print(ba);	multivector_print(tmp);	multivector_print(Rab);
+// 	printf("\r\n");
 
-// 	printf("Rotate v by twice the angle between a and b\r\n");
-// 	vector_print(&v);
-// 	vector_print(&a);
-// 	vector_print(&b);
-// 	// bivector_print(&ab);
-// 	// bivector_print(&ba);
-// 	vector_print(&Rab);
+// 	printf("i,j,k,ij,ijk\r\n");
+// 	MULTIVECTOR i={0,1}, j={0,0,1}, k={0,0,0,1},jk={0}, ij={0}, ki={0}, ijk={0};
+// 	multivector_product(&jk, j,k); 
+// 	multivector_product(&ij, i,j);
+// 	multivector_product(&ki, k,i);
+// 	multivector_product(&ijk, ij,k);
+	
+// 	multivector_print(i); multivector_print(j);multivector_print(k);multivector_print(ij); multivector_print(jk); multivector_print(ki); multivector_print(ijk);
+// 	printf("\r\n");
 
 // 	return 0;
 // }

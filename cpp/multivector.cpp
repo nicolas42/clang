@@ -6,9 +6,9 @@
 
 namespace multivector {
 
-	typedef struct {
-		double e0, x, y, z, yz, zy, xy, xyz;
-	} MULTIVECTOR;
+	// typedef struct {
+	// 	double e0, x, y, z, yz, zy, xy, xyz;
+	// } MULTIVECTOR;
 
 	void init(MULTIVECTOR *a){
 		a->e0 = 0; a->x = 0; a->y = 0; a->z = 0; a->yz = 0; a->zy = 0; a->xy = 0; a->xyz = 0; 
