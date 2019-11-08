@@ -10,7 +10,7 @@
 #include "interface.h"
 
 /* Also known as the birthday paradox */
-int chance_of_collisions(double* probability, double items, double slots){
+int mymath_chance_of_collisions(double* probability, double items, double slots){
 
 	double p = 1; // probability of no collision
 	
@@ -50,7 +50,7 @@ int main(int argc, char **argv)
 
 if (1){
 
-	LIB_MULTIVECTOR m; lib_multivector_init(&m);
+	const LIB_MULTIVECTOR m; lib_multivector_init(&m);
 	// LIB_MULTIVECTOR m = lib_multivector; // can be const, faster???
 
 	// Multivector Rotation
