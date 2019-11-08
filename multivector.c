@@ -8,6 +8,24 @@
 // 	double e0, x, y, z, yz, zy, xy, xyz;
 // } MULTIVECTOR;
 
+const LIB_MULTIVECTOR lib_multivector = {
+	.init = multivector_init,
+	.product = multivector_product,
+	.rotate = multivector_rotate,
+	.print = multivector_print,
+	.printv = multivector_printv,
+	.str = multivector_str
+};
+
+void lib_multivector_init(LIB_MULTIVECTOR *a){
+	a->init = multivector_init;
+	a->product = multivector_product;
+	a->rotate = multivector_rotate;
+	a->print = multivector_print;
+	a->printv = multivector_printv;
+	a->str = multivector_str;
+}
+
 void multivector_init(MULTIVECTOR *a){
 	a->e0 = 0; a->x = 0; a->y = 0; a->z = 0; a->yz = 0; a->zy = 0; a->xy = 0; a->xyz = 0; 
 }
@@ -49,7 +67,6 @@ char* multivector_str(char* buf, MULTIVECTOR v){
 			
 	return buf;
 }
-
 
 // int main(int argc, char **argv)
 // {

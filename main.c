@@ -7,6 +7,7 @@
 #include "tokenize.h"
 #include "count_ticks.h"
 #include "primes.h"
+#include "interface.h"
 
 /* Also known as the birthday paradox */
 int chance_of_collisions(double* probability, double items, double slots){
@@ -24,6 +25,13 @@ int chance_of_collisions(double* probability, double items, double slots){
 int main(int argc, char **argv)
 {
 
+	// // Interface Demo
+    // Library.method1();
+    // Library.method2(5);
+    // printf("%d\n", Library.some_value);
+
+
+
 	// Get Arguments
 	int len_args = argc-1;
 	double args[len_args];
@@ -38,18 +46,24 @@ int main(int argc, char **argv)
 	{
 		printf("%f ", args[i]);
 	}
-	
 
+
+if (1){
+
+	LIB_MULTIVECTOR m; lib_multivector_init(&m);
+	// LIB_MULTIVECTOR m = lib_multivector; // can be const, faster???
 
 	// Multivector Rotation
 	const double PI = 3.14159265359;
 	double angle = PI/4;
 	MULTIVECTOR v = {0,1,0,0}, a = {0,1,0,0}, b = {0,cos(angle), sin(angle)}, Rab = {0};
-	multivector_rotate(&Rab, v, a, b);
+	m.rotate(&Rab, v, a, b);
 	printf("Rotate v by twice the angle between a and b\r\n");
-	multivector_printv(v); multivector_printv(a); multivector_printv(b); multivector_printv(Rab); 
+	m.printv(v); m.printv(a); m.printv(b); m.printv(Rab); 
 
+}
 /*
+
 	// Collision Probability
 	double probability = -1, items = 20, slots = 365;
 	chance_of_collisions(&probability, items, slots);
