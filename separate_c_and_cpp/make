@@ -1,0 +1,6 @@
+gcc -fsanitize=address -Wall -pedantic -std=c99   -c *.c
+gcc -fsanitize=address -Wall -pedantic -std=c++11 -c *.cpp
+gcc -fsanitize=address -Wall -pedantic *.o
+rm *.o
+#./a.out $@
+
