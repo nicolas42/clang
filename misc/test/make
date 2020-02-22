@@ -1,0 +1,7 @@
+cat make 
+gcc -c *.c  -std=c99 -g -Wall -pedantic -fsanitize=address
+gcc *.o     -std=c99 -g -Wall -pedantic -fsanitize=address
+rm *.o
+./a.out $@
+rm a.out
+open mandelbrot.ppm

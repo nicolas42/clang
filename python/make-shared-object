@@ -1,0 +1,6 @@
+cat make-shared-object
+gcc ../src/mandelbrot.c -I../src -fPIC -shared -o libmandelbrot.so
+python demo-mandelbrot.py
+open mandelbrot.ppm 
+
+

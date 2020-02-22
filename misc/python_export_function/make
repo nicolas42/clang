@@ -1,2 +1,0 @@
-gcc -shared -o main.so -fPIC main.c
-python main.py
