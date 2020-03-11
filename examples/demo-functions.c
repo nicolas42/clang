@@ -39,7 +39,7 @@ int main(int argc, char **argv)
     // printf("%d\n", Library.some_value);
 
 
-/*
+
 	// Get Arguments
 	int len_args = argc-1;
 	double args[len_args];
@@ -55,7 +55,7 @@ int main(int argc, char **argv)
 		printf("%f ", args[i]);
 	}
 	printf("\r\n");
-*/
+
 
 	// Multivector Library
 	// By default multivector.h imports a type MULTIVECTOR 
@@ -71,15 +71,13 @@ int main(int argc, char **argv)
 	
 	// LIB_MULTIVECTOR mv = multivector;
 
-
 	const double PI = 3.14159265359;
 	double angle = PI/4;
 	MULTIVECTOR v = {0,1,0,0}, a = {0,1,0,0}, b = {0,cos(angle), sin(angle)}, Rab = {0};
-	multivector::rotate(&Rab, v, a, b);
+	multivector.rotate(&Rab, v, a, b);
 	printf("Rotate v by twice the angle between a and b\r\n");
-	multivector::printv(v); multivector::printv(a); multivector::printv(b); multivector::printv(Rab); 
+	multivector.printv(v); multivector.printv(a); multivector.printv(b); multivector.printv(Rab); 
 	printf("\r\n");
-
 
 
 	// Calculate the probability of a collision (birthday paradox)
@@ -96,24 +94,23 @@ int main(int argc, char **argv)
 	printf("Making %dx%d pixel mandelbrot image at %.2fx%.2f with size %.2fx%.2f...\r\n", pixel_width, pixel_height, xcenter, ycenter, width, height);		
 	printf("\r\n");
 
-/*
+
 	// Tokenizer
 	// read file
+	char *input_file = "make/make.sh";
 	char buffer[1000000];
-	FILE* fp = fopen("main.c", "r");
+	FILE* fp = fopen(input_file, "r");
     fread(buffer, 1000000, 1, fp);
 	fclose(fp);
-	
 	// make tokens
 	int tokens[1000000];
-	int len_tokens = 0;
-	tokenize(tokens, &len_tokens, buffer, isspace);
-		// print tokens
-	for (int i = 0; i < min(10, len_tokens); i++){
+	int tokens_length = 0;
+	tokenize(tokens, &tokens_length, buffer, isspace);
+	// print tokens
+	for (int i = 0; i < min(10, tokens_length); i++){
 		printf("[%s] ", buffer + tokens[i]);
 	}
 	printf("\r\n");
-
 
 
 	// Make Primes
@@ -130,7 +127,6 @@ int main(int argc, char **argv)
 	puts("Counting ticks...");
 	count_ticks(5);
 	printf("\r\n");
-*/
 
 	return 0;
 }
