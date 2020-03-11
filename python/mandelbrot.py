@@ -1,12 +1,12 @@
 from ctypes import *
 
-lib = CDLL("libmandelbrot.so", RTLD_GLOBAL)
+lib = CDLL("python/mandelbrot.so", RTLD_GLOBAL)
 
 mandelbrot = lib.mandelbrot
 mandelbrot.argtypes = [c_int, c_int, c_double, c_double, c_double, c_double]
 
-# if __name__ == "__main__":
-#     mandelbrot(1000,1000,0,0,4,4)
+if __name__ == "__main__":
+    mandelbrot(1000,1000,0,0,4,4)
 
 
 

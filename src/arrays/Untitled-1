@@ -1,0 +1,16 @@
+I'm going to try to make an expanding array system whereby I can relatively easily translate the code between different datatypes.
+
+Specifically I want to try to find out if I can use a typedef to change the type of the datatypes
+
+Another system might be needed for structs
+
+STRIDE
+I could do this with a stride field
+
+or all the functions could be switch statements - inefficient.  but then again this is to make me program faster, not the program
+
+CHAR TYPE
+
+
+Printing
+A generic type breaks the print system which everybody uses.  I would have to make my own print commands

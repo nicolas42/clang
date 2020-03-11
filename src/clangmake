@@ -1,6 +1,0 @@
-clang -c -Wall -pedantic *.c
-clang -Wall -pedantic *.o
-./a.out $@
-rm *.o
-rm a.out
-
