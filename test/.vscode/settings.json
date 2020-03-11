@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "pair_array.h": "c",
+        "stdlib.h": "c"
+    }
+}

@@ -13,8 +13,8 @@ typedef struct {
 	int allocated;
 } pair_array;
 
-pair_array* pair_array_init(pair_array* a);
-pair_array* pair_array_add(pair_array* a, struct pair b);
+void pair_array_init(pair_array* a);
+void pair_array_add(pair_array* a, struct pair b);
 
 
 

@@ -1,0 +1,35 @@
+
+#ifndef image_H
+#define image_H
+
+struct image {
+	int x;
+	int y;
+	int w; 
+	int h;
+	char *data;
+	int stride;
+};
+
+void image_init(struct image *a, int w, int h, int stride);
+// void image_make(struct image *a, int x, int y);
+
+void image_init(struct image *a, int w, int h, int stride){
+	
+	assert(stride <= 4);
+
+	a->w = w;
+	a->h = h;
+	a-> stride = stride;
+	malloc(w*h*stride);
+
+	for (size_t i = 0; i < w*h; i+=stride)
+	{
+		a->data[i] = '0';
+	}
+	
+}
+
+
+
+#endif
