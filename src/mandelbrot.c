@@ -4,7 +4,8 @@
 #include <stdlib.h>
 // #include <string.h>
 
-int mandelbrot(int pixel_width, int pixel_height, double xcenter, double ycenter, double width, double height)
+int mandelbrot(int pixel_width, int pixel_height, double xcenter, \
+    double ycenter, double width, double height)
 {
 
     // to see full image: mandelbrot(1000,1000,0,0,4,4);
