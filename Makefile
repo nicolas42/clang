@@ -1,3 +1,4 @@
+# push ( ) { git add . ; git commit -m $1 ; git push }
 
 flags="-Isrc -std=c99 -Wall -Wextra -Wpedantic -Wfatal-errors -fPIC -g -fsanitize=address -lm"
 
