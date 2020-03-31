@@ -1,0 +1,6 @@
+echo "gcc -shared -o main.so -fPIC main.c
+python main.py
+"
+gcc -shared -o main.so -fPIC main.c
+python main.py 98789
+

@@ -1,0 +1,6 @@
+# mkdir bin
+gcc -c -Wall -pedantic -std=gnu99 -o bin/thing.o thing.c
+gcc -c -Wall -pedantic -std=gnu99 -o bin/test.o test.c 
+gcc -Wall -pedantic -std=gnu99 -o test bin/*.o
+# rm bin/*.o
+./test
