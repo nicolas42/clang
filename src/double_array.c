@@ -25,7 +25,6 @@ void double_array_printf(struct double_array a, char* format){
 	for (i = 0; i < a.length; i++){
 		printf(format, a.data[i]);
 	}
-	return a;
 }
 
 int double_array_main(int argc, int **argv){
