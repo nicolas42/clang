@@ -193,6 +193,9 @@ void print_trivector(multivector_t a)
 
 int main(void)
 {
+    // #include "multiline_string_literal.h"
+    // printf("%s", multiline_string_literal);
+
     #define T 6.28318530718
 
     arena = malloc(arena_capacity * sizeof(multivector_t));
@@ -228,11 +231,11 @@ int main(void)
 
     // 2D rotation (complex numbers)
     r = mul(2, vector(1,0,0), bivector(1,0,0)); 
-    print(r);
+    print_vector(r);
 
     spinor = mul(2, vector(1,0,0), vector_spherical(1, T/12, T/4));
     r = mul(2, vector(1,0,0), spinor);
-    print(r);
+    print_vector(r);
 
 
     // 3D rotation (multiply v by twice the angle between a and b)
@@ -240,15 +243,16 @@ int main(void)
     a = vector_spherical(1, T/multivector_length, T/4);
     b = vector_spherical(1, T/multivector_length, T/multivector_length);
     r = mul(5, b,a,v,a,b);
-    print(r);
+    print_vector(r);
 
     // spinor1 = mul(2, vector(1,0,0), vector_spherical(1,T/multivector_length,T/4))
     // spinor2 = mul(2, vector(1,0,0), vector_spherical(1,T/multivector_length,T/4))
     // mul(3, vector(1,0,0), spinor1, spinor2);
 
     // chirality???
-    mul(2, trivector(3), trivector(4));
-
+    r = mul(2, trivector(3), trivector(4));
+    print(r);
+    
     free(arena);
 
     return 0;
