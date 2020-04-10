@@ -3,13 +3,6 @@
 #include <math.h>
 #include <stdarg.h>
 
-// Why this warning?
-// a.c:11:12: warning: incompatible pointer types assigning to 'double *' from 'double **'; dereference with * [-Wincompatible-pointer-types]
-//     offset = arena + arena_length;
-//            ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-//              *(                                          )
-// 1 warning generated.
-
 typedef double* multivector_t;
 #define multivector_length 8
 
