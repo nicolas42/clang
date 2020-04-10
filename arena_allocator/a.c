@@ -10,33 +10,35 @@
 //              *(                                          )
 // 1 warning generated.
 
-double *temporary_storage[1000000];
+typedef double* multivector_t;
+
+multivector_t temporary_storage[1000000];
 int temporary_storage_length = 0;
 
-double* arena_allocate(int len){
-    double* offset;
+multivector_t arena_allocate(int len){
+    multivector_t offset;
     offset = temporary_storage + temporary_storage_length;
     temporary_storage_length += len;
     return offset;
 }
 
 
-double* init(){
-    double* a = arena_allocate(8);
+multivector_t init(){
+    multivector_t a = arena_allocate(8);
     for (size_t i = 0; i < 8; i++) { a[i] = 0; }
     return a;
 }
 
 
-double* scalar(double arg){
-    double* a = arena_allocate(8);
+multivector_t scalar(double arg){
+    multivector_t a = arena_allocate(8);
     for (size_t i = 0; i < 8; i++) { a[i] = 0; }
     a[0] = arg;
     return a;
 }
 
-double* vector(double a, double b, double c){
-    double* arr = arena_allocate(8);
+multivector_t vector(double a, double b, double c){
+    multivector_t arr = arena_allocate(8);
     for (size_t i = 0; i < 8; i++) { arr[i] = 0; }
     arr[1] = a;
     arr[2] = b;
@@ -44,8 +46,8 @@ double* vector(double a, double b, double c){
     return arr;
 }
 
-double* bivector(double a, double b, double c){
-    double* arr = arena_allocate(8);
+multivector_t bivector(double a, double b, double c){
+    multivector_t arr = arena_allocate(8);
     for (size_t i = 0; i < 8; i++) { arr[i] = 0; }
     arr[4] = a;
     arr[5] = b;
@@ -53,17 +55,17 @@ double* bivector(double a, double b, double c){
     return arr;
 }
 
-double* trivector(double arg){
-    double* a = arena_allocate(8);
+multivector_t trivector(double arg){
+    multivector_t a = arena_allocate(8);
     for (size_t i = 0; i < 8; i++) { a[i] = 0; }
     a[7] = arg;
     return a;
 }
 
 
-double* geometric_product(double* a, double* b){
+multivector_t geometric_product(multivector_t a, multivector_t b){
 
-    double* c = arena_allocate(8);
+    multivector_t c = arena_allocate(8);
     for (size_t i = 0; i < 8; i++)
     {
         c[i] = 0;
@@ -79,10 +81,10 @@ double* geometric_product(double* a, double* b){
     return c;
 }
 
-double* mul(int num,...) {
+multivector_t mul(int num,...) {
 
    va_list valist;
-   double* result = scalar(1);
+   multivector_t result = scalar(1);
    int i;
 
    /* initialize valist for num number of arguments */
@@ -90,7 +92,7 @@ double* mul(int num,...) {
 
    /* access all the arguments assigned to valist */
    for (i = 0; i < num; i++) {
-      result = geometric_product(result, va_arg(valist, double*));
+      result = geometric_product(result, va_arg(valist, multivector_t));
    }
 	
    /* clean memory reserved for valist */
@@ -99,17 +101,17 @@ double* mul(int num,...) {
    return result;
 }
 
-double* rotate(double* v,double* a,double* b){
+multivector_t rotate(multivector_t v,multivector_t a,multivector_t b){
     // Rotate v by twice the angle between a and b;
     return mul(5, b,a,v,a,b);
 }
 
-double* rot(double* a,double* b){
+multivector_t rot(multivector_t a,multivector_t b){
     // rotate a by twice the angle between itself and b
     return mul(5,b,a,a,a,b);
 }
 
-double* vector_spherical(double r, double theta, double phi){
+multivector_t vector_spherical(double r, double theta, double phi){
     // Spherical coordinates
     // x = cos(theta)*sin(phi); y = cos(theta-90)*sin(phi); z = cos(phi); 
     return vector(
@@ -119,7 +121,7 @@ double* vector_spherical(double r, double theta, double phi){
     );
 }
 
-void print(double* a){
+void print(multivector_t a){
 
     printf("multivector( ");
     for (size_t i = 0; i < 8; i++)
@@ -129,19 +131,19 @@ void print(double* a){
     printf(")\n");
 }
 
-void print_scalar(double* a){
+void print_scalar(multivector_t a){
     printf( "scalar( %.3f )\n", a[0] );
 }
 
-void print_vector(double* a){
+void print_vector(multivector_t a){
     printf( "vector( %.3f %.3f %.3f )\n", a[1],a[2],a[3]);
 }
 
-void print_bivector(double* a){
+void print_bivector(multivector_t a){
     printf( "bivector( %.3f %.3f %.3f )\n", a[4],a[5],a[6]);
 }
 
-void print_trivector(double* a){
+void print_trivector(multivector_t a){
     printf( "trivector( %.3f )\n", a[7]);
 }
 
@@ -156,7 +158,7 @@ void print_trivector(double* a){
 // 	double v[8] = {0, 1,0,0, 0,0,0, 0}; 
 // 	double a[8] = {0, 1,0,0, 0,0,0, 0}; 
 // 	double b[8] = {0, 1/sqrt(2), 1/sqrt(2),0, 0,0,0, 0};
-// 	double *c;
+// 	multivector_t c;
 // 	int i;
 
 
@@ -176,12 +178,12 @@ void print_trivector(double* a){
 
 int main(int argc, char** argv){
  
-    double* v = vector(1,0,0);
-    double* a = vector(1,0,0);
-    double* b = vector(1/sqrt(2),1/sqrt(2),0);
-    double* c;
-    double* r;
-    double* spinor;
+    multivector_t v = vector(1,0,0);
+    multivector_t a = vector(1,0,0);
+    multivector_t b = vector(1/sqrt(2),1/sqrt(2),0);
+    multivector_t c;
+    multivector_t r;
+    multivector_t spinor;
     
     // length
     a = vector(1,1,0);
