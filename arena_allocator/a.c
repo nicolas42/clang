@@ -11,8 +11,9 @@
 // 1 warning generated.
 
 typedef double* multivector_t;
+#define multivector_length 8
 
-multivector_t temporary_storage[1000000];
+multivector_t temporary_storage;
 int temporary_storage_length = 0;
 
 multivector_t arena_allocate(int len){
@@ -22,24 +23,23 @@ multivector_t arena_allocate(int len){
     return offset;
 }
 
-
 multivector_t init(){
-    multivector_t a = arena_allocate(8);
-    for (size_t i = 0; i < 8; i++) { a[i] = 0; }
+    multivector_t a = arena_allocate(multivector_length);
+    for (size_t i = 0; i < multivector_length; i++) { a[i] = 0; }
     return a;
 }
 
 
 multivector_t scalar(double arg){
-    multivector_t a = arena_allocate(8);
-    for (size_t i = 0; i < 8; i++) { a[i] = 0; }
+    multivector_t a = arena_allocate(multivector_length);
+    for (size_t i = 0; i < multivector_length; i++) { a[i] = 0; }
     a[0] = arg;
     return a;
 }
 
 multivector_t vector(double a, double b, double c){
-    multivector_t arr = arena_allocate(8);
-    for (size_t i = 0; i < 8; i++) { arr[i] = 0; }
+    multivector_t arr = arena_allocate(multivector_length);
+    for (size_t i = 0; i < multivector_length; i++) { arr[i] = 0; }
     arr[1] = a;
     arr[2] = b;
     arr[3] = c;
@@ -47,8 +47,8 @@ multivector_t vector(double a, double b, double c){
 }
 
 multivector_t bivector(double a, double b, double c){
-    multivector_t arr = arena_allocate(8);
-    for (size_t i = 0; i < 8; i++) { arr[i] = 0; }
+    multivector_t arr = arena_allocate(multivector_length);
+    for (size_t i = 0; i < multivector_length; i++) { arr[i] = 0; }
     arr[4] = a;
     arr[5] = b;
     arr[6] = c;
@@ -56,8 +56,8 @@ multivector_t bivector(double a, double b, double c){
 }
 
 multivector_t trivector(double arg){
-    multivector_t a = arena_allocate(8);
-    for (size_t i = 0; i < 8; i++) { a[i] = 0; }
+    multivector_t a = arena_allocate(multivector_length);
+    for (size_t i = 0; i < multivector_length; i++) { a[i] = 0; }
     a[7] = arg;
     return a;
 }
@@ -65,8 +65,8 @@ multivector_t trivector(double arg){
 
 multivector_t geometric_product(multivector_t a, multivector_t b){
 
-    multivector_t c = arena_allocate(8);
-    for (size_t i = 0; i < 8; i++)
+    multivector_t c = arena_allocate(multivector_length);
+    for (size_t i = 0; i < multivector_length; i++)
     {
         c[i] = 0;
     }
@@ -81,7 +81,7 @@ multivector_t geometric_product(multivector_t a, multivector_t b){
     return c;
 }
 
-multivector_t mul(int num,...) {
+multivector_t mul(int num, ...) {
 
    va_list valist;
    multivector_t result = scalar(1);
@@ -101,12 +101,12 @@ multivector_t mul(int num,...) {
    return result;
 }
 
-multivector_t rotate(multivector_t v,multivector_t a,multivector_t b){
+multivector_t rotate(multivector_t v, multivector_t a, multivector_t b){
     // Rotate v by twice the angle between a and b;
     return mul(5, b,a,v,a,b);
 }
 
-multivector_t rot(multivector_t a,multivector_t b){
+multivector_t rot(multivector_t a, multivector_t b){
     // rotate a by twice the angle between itself and b
     return mul(5,b,a,a,a,b);
 }
@@ -124,7 +124,7 @@ multivector_t vector_spherical(double r, double theta, double phi){
 void print(multivector_t a){
 
     printf("multivector( ");
-    for (size_t i = 0; i < 8; i++)
+    for (size_t i = 0; i < multivector_length; i++)
     {
         printf("%.3f ", a[i]);
     }
@@ -147,37 +147,13 @@ void print_trivector(multivector_t a){
     printf( "trivector( %.3f )\n", a[7]);
 }
 
-#define PI 3.14159265359
-#define T 6.28318530718
-
-
-
-
-// int main(int argc, char **argv)
-// {
-// 	double v[8] = {0, 1,0,0, 0,0,0, 0}; 
-// 	double a[8] = {0, 1,0,0, 0,0,0, 0}; 
-// 	double b[8] = {0, 1/sqrt(2), 1/sqrt(2),0, 0,0,0, 0};
-// 	multivector_t c;
-// 	int i;
-
-
-// 	// c = mul(b, mul(a, mul(v, mul(a, b))));
-//     c = multiply(5, b,a,v,a,b);
-
-// 	printf("[%.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f]\n", 
-// 			c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7]);
-
-// 	// for (i = 0; i < garbage_length; i += 1){
-// 	// 	free(garbage[i]);
-// 	// }
-// 	return 0;
-// }
-
-
-
 int main(int argc, char** argv){
- 
+
+    #define PI 3.14159265359
+    #define T 6.28318530718
+
+    temporary_storage = malloc(10000 * sizeof(multivector_t));
+
     multivector_t v = vector(1,0,0);
     multivector_t a = vector(1,0,0);
     multivector_t b = vector(1/sqrt(2),1/sqrt(2),0);
@@ -190,21 +166,21 @@ int main(int argc, char** argv){
     r = mul(2,a,a);
     print_scalar(r);
 
-    r = mul(2, vector_spherical(1, T/8, T/4),vector_spherical(1, T/8, T/4));
+    r = mul(2, vector_spherical(1, T/multivector_length, T/4),vector_spherical(1, T/multivector_length, T/4));
     print_scalar(r);
 
     // area
     r = mul(2, vector(1,0,0), vector(0,1,0));
     print_bivector(r);
 
-    r = mul(2, vector_spherical(1,T/8, T/4), vector_spherical(1,3*T/8, T/4));
+    r = mul(2, vector_spherical(1,T/multivector_length, T/4), vector_spherical(1,3*T/multivector_length, T/4));
     print_bivector(r);
 
     // volume
     r = mul(3, vector(1,0,0), vector(0,1,0), vector(0,0,1));
     print_trivector(r);
 
-    r = mul(3, vector_spherical(1, T/8, T/4), vector_spherical(1, 3*T/8, T/4), vector(0,0,1));
+    r = mul(3, vector_spherical(1, T/multivector_length, T/4), vector_spherical(1, 3*T/multivector_length, T/4), vector(0,0,1));
     print_trivector(r);
 
     // 2D rotation (complex numbers)
@@ -218,17 +194,23 @@ int main(int argc, char** argv){
 
     // 3D rotation (multiply v by twice the angle between a and b)
     v = vector(1,0,0);
-    a = vector_spherical(1, T/8, T/4);
-    b = vector_spherical(1, T/8, T/8);
+    a = vector_spherical(1, T/multivector_length, T/4);
+    b = vector_spherical(1, T/multivector_length, T/multivector_length);
     r = mul(5, b,a,v,a,b);
     print(r);
 
-    // spinor1 = mul(vector(1,0,0), vector_spherical(1,T/8))
-    // spinor2 = mul(vector(1,0,0), vector_spherical(1,T/8,T/4))
+    // spinor1 = mul(vector(1,0,0), vector_spherical(1,T/multivector_length))
+    // spinor2 = mul(vector(1,0,0), vector_spherical(1,T/multivector_length,T/4))
     // mul(vector(1,0,0), spinor1, spinor2);
 
     // chirality???
     mul(2, trivector(3), trivector(4));
 
+    free(temporary_storage);
+
     return 0;
 }
+
+#undef multivector_length
+#undef PI
+#undef T
