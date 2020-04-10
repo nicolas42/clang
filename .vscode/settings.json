@@ -10,6 +10,7 @@
         "fstream": "cpp",
         "sstream": "cpp",
         "unordered_map": "cpp",
-        "int_array.h": "c"
+        "int_array.h": "c",
+        "math.h": "c"
     }
 }
