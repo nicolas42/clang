@@ -251,7 +251,7 @@ int main(void)
 
     // chirality???
     r = mul(2, trivector(3), trivector(4));
-    print(r);
+    print_vector(r);
     
     free(arena);
 
