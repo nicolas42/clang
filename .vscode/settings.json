@@ -14,6 +14,10 @@
         "math.h": "c",
         "stdio.h": "c",
         "object.h": "c",
-        "obj.h": "c"
+        "obj.h": "c",
+        "multivector_namespace.h": "c",
+        "*.txt": "c",
+        "test": "c",
+        "stdlib.h": "c"
     }
 }

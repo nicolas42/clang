@@ -1,0 +1,46 @@
+rebol []
+
+file-contents: read %rename_test.txt
+
+o: copy []
+
+foreach word [
+    "arena_allocate" "arena_reset" "init" "scalar" "vector" "bivector" "trivector" "geometric_product" "mul" "rotate" 
+    "rot" "vector_spherical" "print" "print_scalar" "print_vector" "print_bivector" "print_trivector" "main" 
+] [
+    append o index? find file-contents word
+]
+
+write %renamer_out.txt file-contents
+
+str: read %rename_test.txt
+
+
+find-any: func [ a b ] [
+    
+    o: copy []
+    foreach b b [ 
+        append o index? find/case a b
+    ]
+    find/case a pick b index? minimum-of o
+]
+
+find-any str [
+    "arena_allocate" "arena_reset" "init" "scalar" "vector" "bivector" "trivector" "geometric_product" "mul" "rotate" 
+    "rot" "vector_spherical" "print" "print_scalar" "print_vector" "print_bivector" "print_trivector" "main" 
+]
+
+
+import re
+
+rep = {"condition1": "", "condition2": "text"} # define desired replacements here
+
+# use these three lines to do the replacement
+rep = dict((re.escape(k), v) for k, v in rep.iteritems()) 
+#Python 3 renamed dict.iteritems to dict.items so use rep.items() for latest versions
+pattern = re.compile("|".join(rep.keys()))
+text = pattern.sub(lambda m: rep[re.escape(m.group(0))], text)
+
+
+pattern.sub(lambda m: rep[re.escape(m.group(0))], "(condition1) and --condition2--")
+'() and --text--'

@@ -13,7 +13,7 @@ void do_it_again(void)
 	printf("You did it again!\n");
 }
 
-const struct namespace_t namespace = {
+struct namespace_t namespace = {
 	.do_it = do_it, 
 	.do_it_again = do_it_again
 };

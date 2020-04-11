@@ -9,6 +9,6 @@ typedef struct namespace_t {
 	void (*do_it_again)(void);	
 }  namespace_t;
 
-extern const struct namespace_t namespace;
+extern struct namespace_t namespace;
 
 #endif
