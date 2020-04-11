@@ -1,5 +1,12 @@
 /*
-clang -std=c99 -Weverything multivector.c; ./a.out
+clang -std=c99 -Weverything mv_multivector.c; ./a.out
+
+implements the multivector functions
+init scalar vector bivector trivector vector_spherical 
+geometric_product mul rotate rot 
+print print_scalar print_vector print_bivector print_trivector 
+arena_make arena_allocate arena_recycle arena_free arena arena_length arena_capacity 
+
 */
 
 #include <stdio.h>
@@ -8,120 +15,120 @@ clang -std=c99 -Weverything multivector.c; ./a.out
 #include <stdarg.h>
 // #include "short_type.h"
 
-#define m_length 8
-typedef double* m_t;
+#define mv_length 8
+typedef double* mv_t;
 
-m_t m_init(void);
-m_t m_scalar(double arg);
-m_t m_vector(double a, double b, double c);
-m_t m_bivector(double a, double b, double c);
-m_t m_trivector(double arg);
-m_t m_vector_spherical(double r, double theta, double phi);
+mv_t mv_init(void);
+mv_t mv_scalar(double arg);
+mv_t mv_vector(double a, double b, double c);
+mv_t mv_bivector(double a, double b, double c);
+mv_t mv_trivector(double arg);
+mv_t mv_vector_spherical(double r, double theta, double phi);
 
-m_t m_geometric_product(m_t a, m_t b);
-m_t m_mul(int num, ...);
+mv_t mv_geometric_product(mv_t a, mv_t b);
+mv_t mv_mul(int num, ...);
 
-m_t m_rotate(m_t v, m_t a, m_t b);
-m_t m_rot(m_t a, m_t b);
+mv_t mv_rotate(mv_t v, mv_t a, mv_t b);
+mv_t mv_rot(mv_t a, mv_t b);
 
-void m_print(m_t a);
-void m_print_scalar(m_t a);
-void m_print_vector(m_t a);
-void m_print_bivector(m_t a);
-void m_print_trivector(m_t a);
+void mv_print(mv_t a);
+void mv_print_scalar(mv_t a);
+void mv_print_vector(mv_t a);
+void mv_print_bivector(mv_t a);
+void mv_print_trivector(mv_t a);
 
-void m_arena_make(size_t cap);
-m_t m_arena_allocate(void);
-void m_arena_recycle(void);
-void m_arena_free(void);
+void mv_arena_make(size_t cap);
+mv_t mv_arena_allocate(void);
+void mv_arena_recycle(void);
+void mv_arena_free(void);
 
-static m_t m_arena;
-static size_t m_arena_length;
-static size_t m_arena_capacity;
+static mv_t mv_arena;
+static size_t mv_arena_length;
+static size_t mv_arena_capacity;
 
 
 // === Arena Allocator =============
 
-void m_arena_make(size_t cap)
+void mv_arena_make(size_t cap)
 {
-    m_arena_length = 0;
-    m_arena_capacity = cap;
-    m_arena = malloc(m_arena_capacity * sizeof(m_t));
+    mv_arena_length = 0;
+    mv_arena_capacity = cap;
+    mv_arena = malloc(mv_arena_capacity * sizeof(mv_t));
 }
 
-m_t m_arena_allocate(void)
+mv_t mv_arena_allocate(void)
 {
-    m_t offset;
-    offset = m_arena + m_arena_length;
+    mv_t offset;
+    offset = mv_arena + mv_arena_length;
 
     // realloc on overflow
-    if (m_arena_length + m_length > m_arena_capacity){
-        m_arena_capacity *= 2;
-        m_arena = realloc(m_arena, m_arena_capacity * sizeof(m_t));
+    if (mv_arena_length + mv_length > mv_arena_capacity){
+        mv_arena_capacity *= 2;
+        mv_arena = realloc(mv_arena, mv_arena_capacity * sizeof(mv_t));
     }
 
-    m_arena_length += m_length;
+    mv_arena_length += mv_length;
     return offset;
 }
 
-void m_arena_recycle(void)
+void mv_arena_recycle(void)
 {
-    m_arena_length = 0;
+    mv_arena_length = 0;
 }
 
-void m_arena_free(void)
+void mv_arena_free(void)
 {
-    free(m_arena);
+    free(mv_arena);
 }
 
 // ===================================
 
-m_t m_init(void)
+mv_t mv_init(void)
 {
-    m_t a = m_arena_allocate();
-    for (size_t i = 0; i < m_length; i++) { a[i] = 0; }
+    mv_t a = mv_arena_allocate();
+    for (size_t i = 0; i < mv_length; i++) { a[i] = 0; }
     return a;
 }
 
 
-m_t m_scalar(double arg)
+mv_t mv_scalar(double arg)
 {
-    m_t a = m_arena_allocate();
-    for (size_t i = 0; i < m_length; i++) { a[i] = 0; }
+    mv_t a = mv_arena_allocate();
+    for (size_t i = 0; i < mv_length; i++) { a[i] = 0; }
     a[0] = arg;
     return a;
 }
 
-m_t m_vector(double a, double b, double c)
+mv_t mv_vector(double a, double b, double c)
 {
-    m_t arr = m_arena_allocate();
-    for (size_t i = 0; i < m_length; i++) { arr[i] = 0; }
+    mv_t arr = mv_arena_allocate();
+    for (size_t i = 0; i < mv_length; i++) { arr[i] = 0; }
     arr[1] = a;
     arr[2] = b;
     arr[3] = c;
     return arr;
 }
 
-m_t m_bivector(double a, double b, double c)
+mv_t mv_bivector(double a, double b, double c)
 {
-    m_t arr = m_arena_allocate();
-    for (size_t i = 0; i < m_length; i++) { arr[i] = 0; }
+    mv_t arr = mv_arena_allocate();
+    for (size_t i = 0; i < mv_length; i++) { arr[i] = 0; }
     arr[4] = a;
     arr[5] = b;
     arr[6] = c;
     return arr;
 }
 
-m_t m_trivector(double arg)
+mv_t mv_trivector(double arg)
 {
-    m_t a = m_arena_allocate();
-    for (size_t i = 0; i < m_length; i++) { a[i] = 0; }
+    mv_t a = mv_arena_allocate();
+    for (size_t i = 0; i < mv_length; i++) { a[i] = 0; }
     a[7] = arg;
     return a;
 }
 
 
-m_t m_geometric_product(m_t a, m_t b)
+mv_t mv_geometric_product(mv_t a, mv_t b)
 {
 
     // multivector product in R3
@@ -136,8 +143,8 @@ m_t m_geometric_product(m_t a, m_t b)
 
     // "All the pieces matter" - Lester Freamon
 
-    m_t c = m_arena_allocate();
-    for (size_t i = 0; i < m_length; i++)
+    mv_t c = mv_arena_allocate();
+    for (size_t i = 0; i < mv_length; i++)
     {
         c[i] = 0;
     }
@@ -152,11 +159,11 @@ m_t m_geometric_product(m_t a, m_t b)
     return c;
 }
 
-m_t m_mul(int num, ...)
+mv_t mv_mul(int num, ...)
 {
 
    va_list valist;
-   m_t result = m_scalar(1);
+   mv_t result = mv_scalar(1);
    int i;
 
    /* initialize valist for num number of arguments */
@@ -164,7 +171,7 @@ m_t m_mul(int num, ...)
 
    /* access all the arguments assigned to valist */
    for (i = 0; i < num; i++) {
-      result = m_geometric_product(result, va_arg(valist, m_t));
+      result = mv_geometric_product(result, va_arg(valist, mv_t));
    }
 	
    /* clean memory reserved for valist */
@@ -173,61 +180,61 @@ m_t m_mul(int num, ...)
    return result;
 }
 
-m_t m_rotate(m_t v, m_t a, m_t b)
+mv_t mv_rotate(mv_t v, mv_t a, mv_t b)
 {
     // Rotate v by twice the angle between a and b;
-    return m_mul(5, b,a,v,a,b);
+    return mv_mul(5, b,a,v,a,b);
 }
 
-m_t m_rot(m_t a, m_t b)
+mv_t mv_rot(mv_t a, mv_t b)
 {
     // rotate a by twice the angle between itself and b
-    return m_mul(5,b,a,a,a,b);
+    return mv_mul(5,b,a,a,a,b);
 }
 
-m_t m_vector_spherical(double r, double theta, double phi)
+mv_t mv_vector_spherical(double r, double theta, double phi)
 {
     // Spherical coordinates
     // x = cos(theta)*sin(phi); y = cos(theta-90)*sin(phi); z = cos(phi); 
-    return m_vector(
+    return mv_vector(
         r*cos(theta)*sin(phi), 
         r*sin(theta)*sin(phi), 
         r*cos(phi)
     );
 }
 
-void m_print(m_t a)
+void mv_print(mv_t a)
 {
 
     printf("multivector( ");
-    for (size_t i = 0; i < m_length; i++)
+    for (size_t i = 0; i < mv_length; i++)
     {
         printf("%.3f ", a[i]);
     }
     printf(")\n");
 }
 
-void m_print_scalar(m_t a)
+void mv_print_scalar(mv_t a)
 {
-    printf( "m_scalar( %.3f )\n", a[0] );
+    printf( "mv_scalar( %.3f )\n", a[0] );
 }
 
-void m_print_vector(m_t a)
+void mv_print_vector(mv_t a)
 {
-    printf( "m_vector( %.3f %.3f %.3f )\n", a[1],a[2],a[3]);
+    printf( "mv_vector( %.3f %.3f %.3f )\n", a[1],a[2],a[3]);
 }
 
-void m_print_bivector(m_t a)
+void mv_print_bivector(mv_t a)
 {
-    printf( "m_bivector( %.3f %.3f %.3f )\n", a[4],a[5],a[6]);
+    printf( "mv_bivector( %.3f %.3f %.3f )\n", a[4],a[5],a[6]);
 }
 
-void m_print_trivector(m_t a)
+void mv_print_trivector(mv_t a)
 {
-    printf( "m_trivector( %.3f )\n", a[7]);
+    printf( "mv_trivector( %.3f )\n", a[7]);
 }
 
-#undef m_length
+#undef mv_length
 
 
 int main(void)
@@ -237,82 +244,82 @@ int main(void)
     // #include "multiline_string_literal.h"
     // printf("%s", multiline_string_literal);
 
-    m_arena_make(1000);
+    mv_arena_make(1000);
 
-    m_t v = m_vector(1,0,0);
-    m_t a = m_vector(1,0,0);
-    m_t b = m_vector(1/sqrt(2),1/sqrt(2),0);
-    // m_t c;
-    m_t r;
-    m_t spinor;
-    m_t spinor1;
-    m_t spinor2;
+    mv_t v = mv_vector(1,0,0);
+    mv_t a = mv_vector(1,0,0);
+    mv_t b = mv_vector(1/sqrt(2),1/sqrt(2),0);
+    // mv_t c;
+    mv_t r;
+    mv_t spinor;
+    mv_t spinor1;
+    mv_t spinor2;
 
     printf("\n");
-    printf("m_length\n");
+    printf("mv_length\n");
     printf("multiplying two vectors which have the same direction is equivalent to dotting them together\n");
-    printf("which gives the m_length squared\n");
-    printf("r = m_mul(2, m_vector(1,1,0), m_vector(1,1,0));\n");
+    printf("which gives the mv_length squared\n");
+    printf("r = mv_mul(2, mv_vector(1,1,0), mv_vector(1,1,0));\n");
     
-    r = m_mul(2, m_vector(1,1,0), m_vector(1,1,0));
-    m_print_scalar(r);
+    r = mv_mul(2, mv_vector(1,1,0), mv_vector(1,1,0));
+    mv_print_scalar(r);
 
     printf("\n");
     printf("In spherical coordinates (r,theta,phi) where TAU = 2*Pi\n");
-    printf("r = m_mul(2, m_vector_spherical(1, TAU/8, TAU/4), m_vector_spherical(1, TAU/8, TAU/4));\n");
+    printf("r = mv_mul(2, mv_vector_spherical(1, TAU/8, TAU/4), mv_vector_spherical(1, TAU/8, TAU/4));\n");
     
-    r = m_mul(2, m_vector_spherical(1, TAU/8, TAU/4), m_vector_spherical(1, TAU/8, TAU/4));
-    m_print_scalar(r);
+    r = mv_mul(2, mv_vector_spherical(1, TAU/8, TAU/4), mv_vector_spherical(1, TAU/8, TAU/4));
+    mv_print_scalar(r);
     
     printf("\n");
     printf("Area\n");
     printf("Multiplying two vectors which are orthogonal to each other will give the area of the rectangle\n");
-    printf("r = m_mul(2, m_vector(1,0,0), m_vector(0,1,0));\n");
+    printf("r = mv_mul(2, mv_vector(1,0,0), mv_vector(0,1,0));\n");
     
-    r = m_mul(2, m_vector(1,0,0), m_vector(0,1,0));
-    m_print_bivector(r);
+    r = mv_mul(2, mv_vector(1,0,0), mv_vector(0,1,0));
+    mv_print_bivector(r);
     
     printf("\n");
     printf("Here we have two vectors in spherical coordinates.\n");
     printf("Multiplying them gives the dot product and the wedge product (similar to the cross product.\n");
-    printf("r = m_mul(2, m_vector_spherical(1, TAU/8, TAU/8), m_vector_spherical(1, TAU/4, TAU/4));\n");
+    printf("r = mv_mul(2, mv_vector_spherical(1, TAU/8, TAU/8), mv_vector_spherical(1, TAU/4, TAU/4));\n");
     
-    r = m_mul(2, m_vector_spherical(1, TAU/8, TAU/8), m_vector_spherical(1, TAU/4, TAU/4));
-    m_print(r);
+    r = mv_mul(2, mv_vector_spherical(1, TAU/8, TAU/8), mv_vector_spherical(1, TAU/4, TAU/4));
+    mv_print(r);
     
     printf("\n");
     printf("volume\n");
-    printf("Volume works great but you get a m_trivector\n");
-    printf("r = m_mul(3, m_vector(1,0,0), m_vector(0,1,0), m_vector(0,0,1));\n");
+    printf("Volume works great but you get a mv_trivector\n");
+    printf("r = mv_mul(3, mv_vector(1,0,0), mv_vector(0,1,0), mv_vector(0,0,1));\n");
     
-    r = m_mul(3, m_vector(1,0,0), m_vector(0,1,0), m_vector(0,0,1));
-    m_print_trivector(r);
+    r = mv_mul(3, mv_vector(1,0,0), mv_vector(0,1,0), mv_vector(0,0,1));
+    mv_print_trivector(r);
     
     printf("\n");
-    printf("r = m_mul(3, m_vector_spherical(1, TAU/8, TAU/4), m_vector_spherical(1, 3*TAU/8, TAU/4), m_vector(0,0,1));\n");
+    printf("r = mv_mul(3, mv_vector_spherical(1, TAU/8, TAU/4), mv_vector_spherical(1, 3*TAU/8, TAU/4), mv_vector(0,0,1));\n");
     
-    r = m_mul(3, m_vector_spherical(1, TAU/8, TAU/4), m_vector_spherical(1, 3*TAU/8, TAU/4), m_vector(0,0,1));
-    m_print_trivector(r);
+    r = mv_mul(3, mv_vector_spherical(1, TAU/8, TAU/4), mv_vector_spherical(1, 3*TAU/8, TAU/4), mv_vector(0,0,1));
+    mv_print_trivector(r);
     
-    printf("A m_trivector is also known as a pseudoscalar since it's a single number\n");
+    printf("A mv_trivector is also known as a pseudoscalar since it's a single number\n");
     printf("but it squares to give a negative scalar\n");
     printf("\n");
     printf("\n");
     printf("2D rotation (complex numbers)\n");
     printf("A vector can be rotated by multiplying it by a bivector\n");
     printf("A bivector works like a complex number\n");
-    printf("r = m_mul(2, m_vector(1,0,0), m_bivector(1,0,0)); \n");
+    printf("r = mv_mul(2, mv_vector(1,0,0), mv_bivector(1,0,0)); \n");
 
-    r = m_mul(2, m_vector(1,0,0), m_bivector(1,0,0)); 
-    m_print_vector(r);
+    r = mv_mul(2, mv_vector(1,0,0), mv_bivector(1,0,0)); 
+    mv_print_vector(r);
     
     printf("\n");
-    printf("spinor = m_mul(2, m_vector(1,0,0), m_vector_spherical(1, TAU/12, TAU/4));\n");
-    printf("r = m_mul(2, m_vector(1,0,0), spinor);\n");
+    printf("spinor = mv_mul(2, mv_vector(1,0,0), mv_vector_spherical(1, TAU/12, TAU/4));\n");
+    printf("r = mv_mul(2, mv_vector(1,0,0), spinor);\n");
     
-    spinor = m_mul(2, m_vector(1,0,0), m_vector_spherical(1, TAU/12, TAU/4));
-    r = m_mul(2, m_vector(1,0,0), spinor);
-    m_print_vector(r);
+    spinor = mv_mul(2, mv_vector(1,0,0), mv_vector_spherical(1, TAU/12, TAU/4));
+    r = mv_mul(2, mv_vector(1,0,0), spinor);
+    mv_print_vector(r);
 
     printf("\n");
     printf("\n");
@@ -320,34 +327,34 @@ int main(void)
     printf("To rotate a vector 'v' in the arc from vector 'a' to vector 'b'\n");
     printf("multiply(b,a,v,a,b);\n");
     printf("This will rotate v by twice the angle between a and b\n");
-    printf("v = m_vector(1,0,0);\n");
-    printf("a = m_vector_spherical(1, TAU/8, TAU/4);\n");
-    printf("b = m_vector_spherical(1, TAU/8, TAU/8);\n");
-    printf("r = m_mul(5, b,a,v,a,b);\n");
+    printf("v = mv_vector(1,0,0);\n");
+    printf("a = mv_vector_spherical(1, TAU/8, TAU/4);\n");
+    printf("b = mv_vector_spherical(1, TAU/8, TAU/8);\n");
+    printf("r = mv_mul(5, b,a,v,a,b);\n");
 
-    v = m_vector(1,0,0);
-    a = m_vector_spherical(1, TAU/8, TAU/4);
-    b = m_vector_spherical(1, TAU/8, TAU/8);
-    r = m_mul(5, b,a,v,a,b);
+    v = mv_vector(1,0,0);
+    a = mv_vector_spherical(1, TAU/8, TAU/4);
+    b = mv_vector_spherical(1, TAU/8, TAU/8);
+    r = mv_mul(5, b,a,v,a,b);
 
-    m_print_vector(r);
+    mv_print_vector(r);
     printf("\n");
     printf("Does it work just multiplying on one side? Not generally I think.\n");
-    printf("spinor1 = m_mul(2, m_vector(1,0,0), m_vector_spherical(1,TAU/8,TAU/4))\n");
-    printf("spinor2 = m_mul(2, m_vector(1,0,0), m_vector_spherical(1,TAU/8,TAU/4))\n");
-    printf("m_mul(3, m_vector(1,0,0), spinor1, spinor2);\n");
+    printf("spinor1 = mv_mul(2, mv_vector(1,0,0), mv_vector_spherical(1,TAU/8,TAU/4))\n");
+    printf("spinor2 = mv_mul(2, mv_vector(1,0,0), mv_vector_spherical(1,TAU/8,TAU/4))\n");
+    printf("mv_mul(3, mv_vector(1,0,0), spinor1, spinor2);\n");
 
-    spinor1 = m_mul(2, m_vector(1,0,0), m_vector_spherical(1,TAU/8,TAU/4));
-    spinor2 = m_mul(2, m_vector(1,0,0), m_vector_spherical(1,TAU/8,TAU/4));
-    m_mul(3, m_vector(1,0,0), spinor1, spinor2);
+    spinor1 = mv_mul(2, mv_vector(1,0,0), mv_vector_spherical(1,TAU/8,TAU/4));
+    spinor2 = mv_mul(2, mv_vector(1,0,0), mv_vector_spherical(1,TAU/8,TAU/4));
+    mv_mul(3, mv_vector(1,0,0), spinor1, spinor2);
 
     printf("\n");
     printf("chirality???\n");
-    printf("r = m_mul(2, m_trivector(3), m_trivector(4));\n");
-    r = m_mul(2, m_trivector(3), m_trivector(4));
-    m_print(r);
+    printf("r = mv_mul(2, mv_trivector(3), mv_trivector(4));\n");
+    r = mv_mul(2, mv_trivector(3), mv_trivector(4));
+    mv_print(r);
     
-    m_arena_free();
+    mv_arena_free();
 
     return 0;
 
