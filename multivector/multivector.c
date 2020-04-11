@@ -37,7 +37,7 @@ void multivector_print_bivector(multivector_t a);
 void multivector_print_trivector(multivector_t a);
 
 multivector_t multivector_arena_allocate(size_t len);
-void multivector_arena_reset(void);
+void multivector_arena_recycle(void);
 
 static multivector_t multivector_arena;
 static size_t multivector_arena_length;
@@ -64,9 +64,14 @@ multivector_t multivector_arena_allocate(size_t len)
     return offset;
 }
 
-void multivector_arena_reset(void)
+void multivector_arena_recycle(void)
 {
     multivector_arena_length = 0;
+}
+
+void multivector_arena_free(void)
+{
+    free(multivector_arena);
 }
 
 // ===================================
@@ -344,7 +349,7 @@ int main(void)
     r = multivector_mul(2, trivector(3), trivector(4));
     multivector_print(r);
     
-    free(multivector_arena);
+    multivector_free());
 
     return 0;
 
