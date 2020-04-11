@@ -13,7 +13,7 @@ regex for functions
 
 // #include "short_type.h"
 
-#define length 8
+#define multivector_length 8
 typedef double* multivector_t;
 
 
@@ -36,8 +36,10 @@ void multivector_print_vector(multivector_t a);
 void multivector_print_bivector(multivector_t a);
 void multivector_print_trivector(multivector_t a);
 
-multivector_t multivector_arena_allocate(size_t len);
+void multivector_arena_init(size_t cap);
+multivector_t multivector_arena_allocate(void);
 void multivector_arena_recycle(void);
+void multivector_arena_free(void);
 
 static multivector_t multivector_arena;
 static size_t multivector_arena_length;
@@ -49,18 +51,25 @@ static size_t multivector_arena_capacity;
 
 // === Arena Allocator =============
 
-multivector_t multivector_arena_allocate(size_t len)
+void multivector_arena_init(size_t cap)
+{
+    multivector_arena_length = 0;
+    multivector_arena_capacity = cap;
+    multivector_arena = malloc(multivector_arena_capacity * sizeof(multivector_t));
+}
+
+multivector_t multivector_arena_allocate(void)
 {
     multivector_t offset;
     offset = multivector_arena + multivector_arena_length;
 
     // realloc on overflow
-    if (multivector_arena_length + len > multivector_arena_capacity){
+    if (multivector_arena_length + multivector_length > multivector_arena_capacity){
         multivector_arena_capacity *= 2;
         multivector_arena = realloc(multivector_arena, multivector_arena_capacity * sizeof(multivector_t));
     }
 
-    multivector_arena_length += len;
+    multivector_arena_length += multivector_length;
     return offset;
 }
 
@@ -78,24 +87,24 @@ void multivector_arena_free(void)
 
 multivector_t multivector_init(void)
 {
-    multivector_t a = multivector_arena_allocate(length);
-    for (size_t i = 0; i < length; i++) { a[i] = 0; }
+    multivector_t a = multivector_arena_allocate();
+    for (size_t i = 0; i < multivector_length; i++) { a[i] = 0; }
     return a;
 }
 
 
 multivector_t multivector_scalar(double arg)
 {
-    multivector_t a = multivector_arena_allocate(length);
-    for (size_t i = 0; i < length; i++) { a[i] = 0; }
+    multivector_t a = multivector_arena_allocate();
+    for (size_t i = 0; i < multivector_length; i++) { a[i] = 0; }
     a[0] = arg;
     return a;
 }
 
 multivector_t multivector_vector(double a, double b, double c)
 {
-    multivector_t arr = multivector_arena_allocate(length);
-    for (size_t i = 0; i < length; i++) { arr[i] = 0; }
+    multivector_t arr = multivector_arena_allocate();
+    for (size_t i = 0; i < multivector_length; i++) { arr[i] = 0; }
     arr[1] = a;
     arr[2] = b;
     arr[3] = c;
@@ -104,8 +113,8 @@ multivector_t multivector_vector(double a, double b, double c)
 
 multivector_t multivector_bivector(double a, double b, double c)
 {
-    multivector_t arr = multivector_arena_allocate(length);
-    for (size_t i = 0; i < length; i++) { arr[i] = 0; }
+    multivector_t arr = multivector_arena_allocate();
+    for (size_t i = 0; i < multivector_length; i++) { arr[i] = 0; }
     arr[4] = a;
     arr[5] = b;
     arr[6] = c;
@@ -114,8 +123,8 @@ multivector_t multivector_bivector(double a, double b, double c)
 
 multivector_t trivector(double arg)
 {
-    multivector_t a = multivector_arena_allocate(length);
-    for (size_t i = 0; i < length; i++) { a[i] = 0; }
+    multivector_t a = multivector_arena_allocate();
+    for (size_t i = 0; i < multivector_length; i++) { a[i] = 0; }
     a[7] = arg;
     return a;
 }
@@ -136,8 +145,8 @@ multivector_t multivector_geometric_product(multivector_t a, multivector_t b)
 
     // "All the pieces matter" - Lester Freamon
 
-    multivector_t c = multivector_arena_allocate(length);
-    for (size_t i = 0; i < length; i++)
+    multivector_t c = multivector_arena_allocate();
+    for (size_t i = 0; i < multivector_length; i++)
     {
         c[i] = 0;
     }
@@ -200,7 +209,7 @@ void multivector_print(multivector_t a)
 {
 
     printf("multivector( ");
-    for (size_t i = 0; i < length; i++)
+    for (size_t i = 0; i < multivector_length; i++)
     {
         printf("%.3f ", a[i]);
     }
@@ -227,7 +236,7 @@ void multivector_print_trivector(multivector_t a)
     printf( "trivector( %.3f )\n", a[7]);
 }
 
-#undef length
+#undef multivector_length
 
 
 int main(void)
@@ -237,10 +246,7 @@ int main(void)
     // #include "multiline_string_literal.h"
     // printf("%s", multiline_string_literal);
 
-    multivector_arena_length = 0;
-    multivector_arena_capacity = 10000;
-    multivector_arena = malloc(multivector_arena_capacity * sizeof(multivector_t));
-
+    multivector_arena_init(1000);
 
 
     multivector_t v = multivector_vector(1,0,0);
@@ -251,9 +257,9 @@ int main(void)
     multivector_t spinor;
     
     printf("\n");
-    printf("length\n");
+    printf("multivector_length\n");
     printf("multiplying two vectors which have the same direction is equivalent to dotting them together\n");
-    printf("which gives the length squared\n");
+    printf("which gives the multivector_length squared\n");
     printf("r = multivector_mul(2, multivector_vector(1,1,0), multivector_vector(1,1,0));\n");
     
     r = multivector_mul(2, multivector_vector(1,1,0), multivector_vector(1,1,0));
@@ -349,7 +355,7 @@ int main(void)
     r = multivector_mul(2, trivector(3), trivector(4));
     multivector_print(r);
     
-    multivector_free());
+    multivector_arena_free();
 
     return 0;
 
