@@ -11,6 +11,9 @@
         "sstream": "cpp",
         "unordered_map": "cpp",
         "int_array.h": "c",
-        "math.h": "c"
+        "math.h": "c",
+        "stdio.h": "c",
+        "object.h": "c",
+        "obj.h": "c"
     }
 }
