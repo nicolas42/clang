@@ -18,6 +18,7 @@
         "multivector_namespace.h": "c",
         "*.txt": "c",
         "test": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "a.h": "c"
     }
 }

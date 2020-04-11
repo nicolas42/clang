@@ -1,4 +1,10 @@
-// clang -std=c11 -Weverything multivector.c; ./a.out
+/*
+clang -std=c99 -Weverything multivector.c; ./a.out
+
+regex for functions
+(init\(|scalar\(|vector\(|bivector\(|multivector_trivector\(|geometric_product\(|mul\(|rotate\(|rot\(|vector_spherical\(|print\(|print_scalar\(|print_vector\(|print_bivector\(|print_trivector\(|multivector_t\(|arena_allocate\(|arena_reset\()
+
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,8 +16,6 @@
 #define length 8
 typedef double* multivector_t;
 
-// regex for functions
-// (init\(|scalar\(|vector\(|bivector\(|multivector_trivector\(|geometric_product\(|mul\(|rotate\(|rot\(|vector_spherical\(|print\(|print_scalar\(|print_vector\(|print_bivector\(|print_trivector\(|multivector_t\(|arena_allocate\(|arena_reset\()
 
 multivector_t multivector_init(void);
 multivector_t multivector_scalar(double arg);
@@ -35,9 +39,9 @@ void multivector_print_trivector(multivector_t a);
 multivector_t multivector_arena_allocate(size_t len);
 void multivector_arena_reset(void);
 
-static multivector_t arena;
-static size_t arena_length;
-static size_t arena_capacity;
+static multivector_t multivector_arena;
+static size_t multivector_arena_length;
+static size_t multivector_arena_capacity;
 
 
 
@@ -48,21 +52,21 @@ static size_t arena_capacity;
 multivector_t multivector_arena_allocate(size_t len)
 {
     multivector_t offset;
-    offset = arena + arena_length;
+    offset = multivector_arena + multivector_arena_length;
 
     // realloc on overflow
-    if (arena_length + len > arena_capacity){
-        arena_capacity *= 2;
-        arena = realloc(arena, arena_capacity * sizeof(multivector_t));
+    if (multivector_arena_length + len > multivector_arena_capacity){
+        multivector_arena_capacity *= 2;
+        multivector_arena = realloc(multivector_arena, multivector_arena_capacity * sizeof(multivector_t));
     }
 
-    arena_length += len;
+    multivector_arena_length += len;
     return offset;
 }
 
 void multivector_arena_reset(void)
 {
-    arena_length = 0;
+    multivector_arena_length = 0;
 }
 
 // ===================================
@@ -221,16 +225,16 @@ void multivector_print_trivector(multivector_t a)
 #undef length
 
 
-int multivector_main(void)
+int main(void)
 {
     #define TAU 6.28318530718
 
     // #include "multiline_string_literal.h"
     // printf("%s", multiline_string_literal);
 
-    arena_length = 0;
-    arena_capacity = 10000;
-    arena = malloc(arena_capacity * sizeof(multivector_t));
+    multivector_arena_length = 0;
+    multivector_arena_capacity = 10000;
+    multivector_arena = malloc(multivector_arena_capacity * sizeof(multivector_t));
 
 
 
@@ -340,7 +344,7 @@ int multivector_main(void)
     r = multivector_mul(2, trivector(3), trivector(4));
     multivector_print(r);
     
-    free(arena);
+    free(multivector_arena);
 
     return 0;
 
