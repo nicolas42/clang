@@ -1,69 +1,155 @@
 #include "multivector.h"
 
-
-void init(MULTIVECTOR *a){
-	a->e0 = 0; a->x = 0; a->y = 0; a->z = 0; a->yz = 0; a->zy = 0; a->xy = 0; a->xyz = 0; 
-}
-
-void product(MULTIVECTOR *c, MULTIVECTOR a, MULTIVECTOR b){
-	c->e0 	= a.e0*b.e0 	+ a.x*b.x 	+ a.y*b.y 	+ a.z*b.z 	- a.yz*b.yz 	- a.zy*b.zy 	- a.xy*b.xy 	- a.xyz*b.xyz;
-	c->x 	= a.e0*b.x 	+ a.x*b.e0 	- a.y*b.xy 	+ a.xy*b.y 	+ a.z*b.zy 	- a.zy*b.z 	- a.xyz*b.yz 	+ a.yz*b.xyz;
-	c->y 	= a.e0*b.y 	+ a.y*b.e0 	+ a.x*b.xy 	- a.xy*b.x 	- a.z*b.yz 	+ a.yz*b.z 	- a.xyz*b.zy 	- a.zy*b.xyz;
-	c->z 	= a.e0*b.z 	+ a.z*b.e0 	- a.x*b.zy 	+ a.zy*b.x 	+ a.y*b.yz 	- a.yz*b.y 	- a.xyz*b.xy 	- a.xy*b.xyz;
-	c->yz 	= a.yz*b.e0 	+ a.e0*b.yz 	+ a.y*b.z 	- a.z*b.y 	+ a.xy*b.zy 	- a.zy*b.xy 	+ a.xyz*b.x 	+ a.x*b.xyz;
-	c->zy 	= a.zy*b.e0 	+ a.e0*b.zy 	+ a.z*b.x 	- a.x*b.z 	+ a.yz*b.xy 	- a.xy*b.yz 	+ a.xyz*b.y 	+ a.y*b.xyz;
-	c->xy 	= a.xy*b.e0 	+ a.e0*b.xy 	+ a.x*b.y 	- a.y*b.x 	+ a.zy*b.yz 	- a.yz*b.zy 	+ a.xyz*b.z 	+ a.z*b.xyz;
-	c->xyz	= a.e0*b.xyz 	+ a.xyz*b.e0 	+ a.x*b.yz 	+ a.yz*b.x 	+ a.y*b.zy 	+ a.zy*b.y 	+ a.z*b.xy 	+ a.xy*b.z;
-}
-
-void rotate(MULTIVECTOR *Rab, MULTIVECTOR v, MULTIVECTOR a, MULTIVECTOR b){
-
-	MULTIVECTOR ab, ba, v2;
-	init(&ab); init(&ba); init(&v2);
-
-	product(&ab, a, b);
-	product(&ba, b, a);
-	product(&v2, v, ab);
-	product(Rab, ba, v2);
-}
-
-void print(MULTIVECTOR v){
-	printf("[%.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f]\r\n", 
-			v.e0, v.x, v.y, v.z, v.yz, v.zy, v.xy, v.xyz);	
-}
-
-void printv(MULTIVECTOR v){
-	printf("[%.2f %.2f %.2f]\r\n", v.x, v.y, v.z);	
-}
-
-char* str(char* buf, MULTIVECTOR v){
-	sprintf(buf, "[%.2f %.2f %.2f %.2f %.2f %.2f %.2f %.2f]\r\n", 
-			v.e0, v.x, v.y, v.z, v.yz, v.zy, v.xy, v.xyz);	
-			
-	return buf;
-}
-
-
-const LIB_MULTIVECTOR multivector = {
-	.init = init,
-	.product = product,
-	.rotate = rotate,
-	.print = print,
-	.printv = printv,
-	.str = str
-};
-
-/*
-int main(int argc, char **argv)
+multivector_t multivector_init(void)
 {
-	const double PI = 3.14159265359;
-	double angle = PI/4;
-	MULTIVECTOR v = {0,1,0,0}, a = {0,1,0,0}, b = {0,cos(angle), sin(angle)}, Rab = {0};
-	multivector.rotate(&Rab, v, a, b);
-	printf("Rotate v by twice the angle between a and b\r\n");
-	multivector.printv(v); multivector.printv(a); multivector.printv(b); multivector.printv(Rab); 
-	printf("\r\n");
-
-	return 0;
+    multivector_t a = (multivector_t)arena_allocate(multivector_size);
+    for (size_t i = 0; i < multivector_length; i++) { a[i] = 0; }
+    return a;
 }
-*/
+
+
+multivector_t multivector_scalar(double arg)
+{
+    multivector_t a = (multivector_t)arena_allocate(multivector_size);
+    for (size_t i = 0; i < multivector_length; i++) { a[i] = 0; }
+    a[0] = arg;
+    return a;
+}
+
+multivector_t multivector_vector(double a, double b, double c)
+{
+    multivector_t arr = (multivector_t)arena_allocate(multivector_size);
+    for (size_t i = 0; i < multivector_length; i++) { arr[i] = 0; }
+    arr[1] = a;
+    arr[2] = b;
+    arr[3] = c;
+    return arr;
+}
+
+multivector_t multivector_bivector(double a, double b, double c)
+{
+    multivector_t arr = (multivector_t)arena_allocate(multivector_size);
+    for (size_t i = 0; i < multivector_length; i++) { arr[i] = 0; }
+    arr[4] = a;
+    arr[5] = b;
+    arr[6] = c;
+    return arr;
+}
+
+multivector_t multivector_trivector(double arg)
+{
+    multivector_t a = (multivector_t)arena_allocate(multivector_size);
+    for (size_t i = 0; i < multivector_length; i++) { a[i] = 0; }
+    a[7] = arg;
+    return a;
+}
+
+
+multivector_t multivector_geometric_product(multivector_t a, multivector_t b)
+{
+
+    // multivector product in R3
+    // c.e0     =   +a.e0*b.e0  +a.e1*b.e1  +a.e2*b.e2  +a.e3*b.e3  -a.e12*b.e12 -a.e23*b.e23 -a.e31*b.e31 -a.e123*b.e123;
+    // c.e1     =   +a.e0*b.e1  +a.e1*b.e0  -a.e2*b.e12  +a.e3*b.e31  +a.e12*b.e2 -a.e23*b.e123 -a.e31*b.e3 -a.e123*b.e23;
+    // c.e2     =   +a.e0*b.e2  +a.e1*b.e12  +a.e2*b.e0  -a.e3*b.e23  -a.e12*b.e1 +a.e23*b.e3 -a.e31*b.e123 -a.e123*b.e31;
+    // c.e3     =   +a.e0*b.e3  -a.e1*b.e31  +a.e2*b.e23  +a.e3*b.e0  -a.e12*b.e123 -a.e23*b.e2 +a.e31*b.e1 -a.e123*b.e12;
+    // c.e12    =   +a.e0*b.e12  +a.e1*b.e2  -a.e2*b.e1  +a.e3*b.e123  +a.e12*b.e0 -a.e23*b.e31 +a.e31*b.e23 +a.e123*b.e3;
+    // c.e23    =   +a.e0*b.e23  +a.e1*b.e123  +a.e2*b.e3  -a.e3*b.e2  +a.e12*b.e31 +a.e23*b.e0 -a.e31*b.e12 +a.e123*b.e1;
+    // c.e31    =   +a.e0*b.e31  -a.e1*b.e3  +a.e2*b.e123  +a.e3*b.e1  -a.e12*b.e23 +a.e23*b.e12 +a.e31*b.e0 +a.e123*b.e2;
+    // c.e123   =   +a.e0*b.e123  +a.e1*b.e23  +a.e2*b.e31  +a.e3*b.e12  +a.e12*b.e3 +a.e23*b.e1 +a.e31*b.e2 +a.e123*b.e0;    
+
+    // "All the pieces matter" - Lester Freamon
+
+    multivector_t c = (multivector_t)arena_allocate(multivector_size);
+    for (size_t i = 0; i < multivector_length; i++)
+    {
+        c[i] = 0;
+    }
+    c[0]   =   +a[0]*b[0]  +a[1]*b[1]  +a[2]*b[2]  +a[3]*b[3]  -a[4]*b[4] -a[5]*b[5] -a[6]*b[6] -a[7]*b[7];
+    c[1]   =   +a[0]*b[1]  +a[1]*b[0]  -a[2]*b[4]  +a[3]*b[6]  +a[4]*b[2] -a[5]*b[7] -a[6]*b[3] -a[7]*b[5];
+    c[2]   =   +a[0]*b[2]  +a[1]*b[4]  +a[2]*b[0]  -a[3]*b[5]  -a[4]*b[1] +a[5]*b[3] -a[6]*b[7] -a[7]*b[6];
+    c[3]   =   +a[0]*b[3]  -a[1]*b[6]  +a[2]*b[5]  +a[3]*b[0]  -a[4]*b[7] -a[5]*b[2] +a[6]*b[1] -a[7]*b[4];
+    c[4]   =   +a[0]*b[4]  +a[1]*b[2]  -a[2]*b[1]  +a[3]*b[7]  +a[4]*b[0] -a[5]*b[6] +a[6]*b[5] +a[7]*b[3];
+    c[5]   =   +a[0]*b[5]  +a[1]*b[7]  +a[2]*b[3]  -a[3]*b[2]  +a[4]*b[6] +a[5]*b[0] -a[6]*b[4] +a[7]*b[1];
+    c[6]   =   +a[0]*b[6]  -a[1]*b[3]  +a[2]*b[7]  +a[3]*b[1]  -a[4]*b[5] +a[5]*b[4] +a[6]*b[0] +a[7]*b[2];
+    c[7]   =   +a[0]*b[7]  +a[1]*b[5]  +a[2]*b[6]  +a[3]*b[4]  +a[4]*b[3] +a[5]*b[1] +a[6]*b[2] +a[7]*b[0];    
+    return c;
+}
+
+multivector_t multivector_mul(int num, ...)
+{
+
+   va_list valist;
+   multivector_t result = multivector_scalar(1);
+   int i;
+
+   /* initialize valist for num number of arguments */
+   va_start(valist, num);
+
+   /* access all the arguments assigned to valist */
+   for (i = 0; i < num; i++) {
+      result = multivector_geometric_product(result, va_arg(valist, multivector_t));
+   }
+	
+   /* clean memory reserved for valist */
+   va_end(valist);
+
+   return result;
+}
+
+multivector_t multivector_rotate(multivector_t v, multivector_t a, multivector_t b)
+{
+    // Rotate v by twice the angle between a and b;
+    return multivector_mul(5, b,a,v,a,b);
+}
+
+multivector_t multivector_rot(multivector_t a, multivector_t b)
+{
+    // rotate a by twice the angle between itself and b
+    return multivector_mul(5,b,a,a,a,b);
+}
+
+multivector_t multivector_vector_spherical(double r, double theta, double phi)
+{
+    // Spherical coordinates
+    // x = cos(theta)*sin(phi); y = cos(theta-90)*sin(phi); z = cos(phi); 
+    return multivector_vector(
+        r*cos(theta)*sin(phi), 
+        r*sin(theta)*sin(phi), 
+        r*cos(phi)
+    );
+}
+
+void multivector_print(multivector_t a)
+{
+
+    printf("multivector( ");
+    for (size_t i = 0; i < multivector_length; i++)
+    {
+        printf("%.3f ", a[i]);
+    }
+    printf(")\n");
+}
+
+void multivector_print_scalar(multivector_t a)
+{
+    printf( "multivector_scalar( %.3f )\n", a[0] );
+}
+
+void multivector_print_vector(multivector_t a)
+{
+    printf( "multivector_vector( %.3f %.3f %.3f )\n", a[1],a[2],a[3]);
+}
+
+void multivector_print_bivector(multivector_t a)
+{
+    printf( "multivector_bivector( %.3f %.3f %.3f )\n", a[4],a[5],a[6]);
+}
+
+void multivector_print_trivector(multivector_t a)
+{
+    printf( "multivector_trivector( %.3f )\n", a[7]);
+}
+
+#undef multivector_length
+#undef multivector_size

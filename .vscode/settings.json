@@ -19,6 +19,7 @@
         "*.txt": "c",
         "test": "c",
         "stdlib.h": "c",
-        "a.h": "c"
+        "a.h": "c",
+        "arena_allocator.h": "c"
     }
 }

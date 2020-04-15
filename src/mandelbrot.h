@@ -8,5 +8,7 @@
 #include <stdlib.h>
 
 int mandelbrot(int pixel_width, int pixel_height, double xcenter, double ycenter, double width, double height);
+void mandelbrot_usage(void);
+int mandelbrot_main(int argc, char** argv);
 
 #endif
