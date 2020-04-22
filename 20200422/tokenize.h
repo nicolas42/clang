@@ -189,11 +189,7 @@ void strings_maybe_grow(strings* f)
 
 void strings_add(strings* f, char* a)
 {
-	if (f->length == f->allocated){
-		f->allocated *= 2;
-		f->data = realloc(f->data, f->allocated*sizeof(char*));
-		printf("GROW!!!\n");
-	}
+	strings_maybe_grow(f);
 	f->data[f->length] = a;
 	f->length += 1;
 }
@@ -201,33 +197,49 @@ void strings_add(strings* f, char* a)
 
 strings split_lines_destructive(char* a)
 {
-	strings lines = strings_make(1000);
+	strings lines = strings_make(10000);
 
 	strings_add(&lines, &(a[0]));
 
+	size_t strlen_a = strlen(a);
 	printf("strlen(a) %lu\n", strlen(a));
-	for (size_t i = 1; i < strlen(a); i++){
 
-		if (is_newline(a[i])) {
+	for (size_t i = 1; i < strlen_a; i++){
+
+		if ( a[i] == '\n' || a[i] == '\r' ) {
 			a[i] = '\0';		
 		}
-		
+	}
+
+	for (size_t i = 1; i < strlen_a; i++) {
+
 		if (a[i-1] == '\0' && a[i] != '\0') {
 			strings_add(&lines, &(a[i]));
 		}
 	}
+
 	return lines;
+}
+
+double min(double a, double b)
+{
+	if (a < b ){
+		return a;
+	}
+	return b;
 }
 
 void demo_split_lines(void)
 {
 	string f = read_file("tokenize.h");
-	printf("%s", f.data);
-
 	strings s = split_lines_destructive(f.data);
-	for (size_t i = 0; i < s.length; i++)
+
+	// printf("%s", f.data);
+	// printf("s.length: %lu\n", s.length);
+
+	for (size_t i = 0; i < min(10, s.length); i++)
 	{
-		printf("\"%s\"\n", s.data[i]);
+		printf("{%s}\n", s.data[i]);
 	}
 	
 }
