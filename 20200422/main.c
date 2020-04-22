@@ -48,10 +48,10 @@ Book make_book(char* title, char* author, char* subject, u32 book_id)
 
 int main( )
 {
-
+/*
     arena_init();
 
-    Book *books = (Book*)arena_allocate(100*sizeof(Book));
+    Book books[100]; // book1, books[1];
 
     books[0] = make_book("C Programming", "Nuha Ali", "C Programming Tutorial", 6495407);
     books[1] = make_book("Telecom Billing", "Zara Ali", "Telecom Billing Tutorial", 6495700);
@@ -63,10 +63,10 @@ int main( )
 
     print_book(books[0]);
     print_book(books[1]);
-
+*/
 
     // tokenize_demo();
-
+    
     demo_split_destructive();
     
    return 0;
