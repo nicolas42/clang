@@ -1,5 +1,5 @@
 cat $0
-clang -Weverything a.c arena_allocator.h types.h
+clang *.h main.c -Weverything
 rm *.gch
 ./a.out
 

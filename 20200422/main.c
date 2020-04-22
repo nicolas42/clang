@@ -7,6 +7,7 @@ clang -Weverything a.c arena_allocator.h types.h ; ./a.out
 #include "types.h"
 #include "arena_allocator.h"
 
+#include "tokenize.h"
 
 typedef struct Book {
    char*  title;
@@ -47,6 +48,7 @@ Book make_book(char* title, char* author, char* subject, u32 book_id)
 
 int main( )
 {
+/*
     arena_init();
 
     Book books[100]; // book1, books[1];
@@ -61,8 +63,10 @@ int main( )
 
     print_book(books[0]);
     print_book(books[1]);
+*/
 
- 
+    // tokenize_demo();
+    demo_split_lines();
    return 0;
 }
 
