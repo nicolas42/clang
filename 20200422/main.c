@@ -66,7 +66,7 @@ int main( )
 */
 
     // tokenize_demo();
-    demo_split_lines();
+    demo_split_destructive();
    return 0;
 }
 
