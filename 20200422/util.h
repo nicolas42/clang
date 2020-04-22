@@ -1,9 +1,9 @@
-#ifndef TOKENIZE_H
-#define TOKENIZE_H
+#ifndef UTIL_H
+#define UTIL_H
 
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
+// #include <ctype.h>
 #include <stdlib.h>
 
 // Parse words by noting down the starting positions of words 
@@ -21,6 +21,7 @@ typedef struct strings {
 	size_t allocated;
 	char** data;
 } strings;
+
 
 string string_make(size_t n);
 void string_free(string f);
@@ -219,45 +220,13 @@ void demo_split_destructive(void)
 }
 
 
+// typedef struct slice { int offset ; int length; } slice;
 
-// strings strings_init(void)
-// {
-// 	strings f;
-// 	f.length = 0;
-// 	f.allocated = 1000;
-// 	f.data = malloc(1000*sizeof(char*));
-// 	return f;
-// }
-
-// strings strings_make(size_t n)
-// {
-// 	strings f;
-// 	f.length = 0;
-// 	f.allocated = n;
-// 	f.data = malloc(n*sizeof(char*));
-// 	return f;
-// }
-
-// void strings_free(strings f)
-// {
-// 	free(f.data);
-// }
-
-// void strings_maybe_grow(strings* f)
-// {
-// 	if (f->length == f->allocated){
-// 		f->allocated *= 2;
-// 		f->data = realloc(f->data, f->allocated*sizeof(char*));
-// 		printf("GROW!!!\n");
-// 	}
-// }
-
-// void strings_add(strings* f, char* a)
-// {
-// 	strings_maybe_grow(f);
-// 	f->data[f->length] = a;
-// 	f->length += 1;
-// }
+// typedef struct slices {
+// 	size_t length;
+// 	size_t allocated;
+// 	slice* data;
+// } slices;
 
 
 #endif

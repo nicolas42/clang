@@ -12,14 +12,12 @@ char* arena_allocate(size_t length);
 void arena_recycle(void);
 void arena_free(void);
 
-#define default_arena_size 1000
+#define default_arena_size 128
 
 static char* arena;
 static size_t arena_length;
 static size_t arena_capacity;
 
-
-// === Arena Allocator =============
 
 void arena_init(void)
 {
