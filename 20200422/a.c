@@ -49,18 +49,18 @@ int main( )
 {
     arena_init();
 
-    Book book1, book2;
+    Book books[100]; // book1, books[1];
 
-    book1 = make_book("C Programming", "Nuha Ali", "C Programming Tutorial", 6495407);
-    book2 = make_book("Telecom Billing", "Zara Ali", "Telecom Billing Tutorial", 6495700);
+    books[0] = make_book("C Programming", "Nuha Ali", "C Programming Tutorial", 6495407);
+    books[1] = make_book("Telecom Billing", "Zara Ali", "Telecom Billing Tutorial", 6495700);
 
-    print_book(book1);
-    print_book(book2);
+    print_book(books[0]);
+    print_book(books[1]);
 
-    book2 = book1;
+    books[1] = books[0];
 
-    print_book(book1);
-    print_book(book2);
+    print_book(books[0]);
+    print_book(books[1]);
 
  
    return 0;
