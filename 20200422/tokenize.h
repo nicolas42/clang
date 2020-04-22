@@ -189,7 +189,11 @@ void strings_maybe_grow(strings* f)
 
 void strings_add(strings* f, char* a)
 {
-	strings_maybe_grow(f);
+	if (f->length == f->allocated){
+		f->allocated *= 2;
+		f->data = realloc(f->data, f->allocated*sizeof(char*));
+		printf("GROW!!!\n");
+	}
 	f->data[f->length] = a;
 	f->length += 1;
 }
