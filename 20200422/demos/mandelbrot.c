@@ -10,7 +10,6 @@
 #include <time.h>
 
 typedef struct {
-    size_t image_index;
     char* image;
     int pixel_width;
     int pixel_height;
@@ -18,15 +17,11 @@ typedef struct {
     double ycenter;
     double width;
     double height;
-    int ystart;
-    int yend;
 } mandelbrot_arg;
 
 void* mandelbrot(void* arg);
 void mandelbrot_usage(void);
 int mandelbrot_main(int argc, char** argv);
-
-
 
 void* mandelbrot( void* arg)
 {
@@ -39,8 +34,6 @@ void* mandelbrot( void* arg)
     double ycenter = a.ycenter;
     double width = a.width;
     double height = a.height;
-    int ystart = a.ystart;
-    int yend = a.yend;
 
     // to see full image: mandelbrot(1000,1000,0,0,4,4);
 
@@ -132,8 +125,6 @@ int main(int argc, char** argv){
     a.ycenter = ycenter;
     a.width = width;
     a.height = height;
-    a.ystart = 0;
-    a.yend = pixel_height;
     
     mandelbrot(&a);
 

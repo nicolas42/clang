@@ -8,7 +8,7 @@ clang -Weverything a.c arena_allocator.h types.h ; ./a.out
 #include "util.h"
 #include "multivector.h"
 #include "mandelbrot.h"
-#include "misc.h"
+// #include "misc.h"
 
 int main(int argc, char** argv)
 {
@@ -26,8 +26,6 @@ int main(int argc, char** argv)
         mv_main();
     } else if ( strcmp(argv[1], "mandelbrot") == 0 ){
         mandelbrot_main(argc, argv);
-    } else if ( strcmp(argv[1], "count_ticks") == 0 ){
-        count_ticks_main();
     }
 
    return 0;

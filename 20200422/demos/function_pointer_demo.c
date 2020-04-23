@@ -41,12 +41,13 @@ int main(int argc, char **argv)
 	}
 
 
-	void* (*fun_pointer)(void* arg);
-	if (locked) {
-		fun_pointer = add1_locked;
-	} else {
-		fun_pointer = add1;
-	}
+	void* (*thread_function)(void* arg) = add1;
+
+	// if (locked) {
+	// 	thread_function = add1_locked;
+	// } else {
+	// 	thread_function = add1;
+	// }
 
 
 	// Launch threads
@@ -54,7 +55,7 @@ int main(int argc, char **argv)
 	for (int i = 0; i < num_threads; i++) {
 		pthread_attr_t attr;
 		pthread_attr_init(&attr);
-		pthread_create(&tids[i], &attr, fun_pointer, NULL);
+		pthread_create(&tids[i], &attr, thread_function, NULL);
 	}
 
 	// Wait until thread is done its work
