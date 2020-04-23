@@ -7,10 +7,6 @@
 #include <inttypes.h>
 #include <time.h>
 
-double time_elapsed(void){
-	return clock()/(double)CLOCKS_PER_SEC;
-}
-
 void count_ticks(double max_time){
 
 	double next_print_time = 1.0;

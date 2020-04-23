@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <time.h>
 
 typedef struct {
     size_t image_index;
@@ -21,13 +22,13 @@ typedef struct {
     int yend;
 } mandelbrot_arg;
 
-int mandelbrot(void* arg);
+void* mandelbrot(void* arg);
 void mandelbrot_usage(void);
 int mandelbrot_main(int argc, char** argv);
 
 
 
-int mandelbrot( void* arg)
+void* mandelbrot( void* arg)
 {
 
     mandelbrot_arg a = *(mandelbrot_arg*) arg;
@@ -87,9 +88,9 @@ int mandelbrot( void* arg)
             }
             
             if (is_in_set) {
-				a.image[y*pixel_width*3 + x*3 + 0] = black[0];
-                a.image[y*pixel_width*3 + x*3 + 1] = black[1];
-                a.image[y*pixel_width*3 + x*3 + 2] = black[2];
+				a.image[y*pixel_width*3 + x*3 + 0] = (char)black[0];
+                a.image[y*pixel_width*3 + x*3 + 1] = (char)black[1];
+                a.image[y*pixel_width*3 + x*3 + 2] = (char)black[2];
 
 				// fputc(black[0], fp);
 				// fputc(black[1], fp);
@@ -108,11 +109,14 @@ int mandelbrot( void* arg)
         }
 		// printf("\n");
     }
-
-  return 0;
+    return (void*)0;
 }
 
 int main(int argc, char** argv){
+
+    double t1, t2; 
+    
+    t1 = clock()/(double)CLOCKS_PER_SEC;
 
     int pixel_width, pixel_height;
     double xcenter, ycenter, width, height;
@@ -122,7 +126,7 @@ int main(int argc, char** argv){
 
     mandelbrot_arg a;
 
-    a.image = malloc(3e6 * sizeof(char));
+    a.image = malloc(3*1000*1000 * sizeof(char));
     a.pixel_width = pixel_width;
     a.pixel_height = pixel_height;
     a.xcenter = xcenter;
@@ -132,7 +136,43 @@ int main(int argc, char** argv){
     a.ystart = 0;
     a.yend = pixel_height;
     
-    mandelbrot(&a);
+    // mandelbrot(&a);
+
+
+    // // Open file and write header
+	// char* filename = "mandelbrot.ppm";
+	// FILE *fp = fopen(filename, "wb"); /* b - binary mode */
+	// (void) fprintf(fp, "P6\n%d %d\n255\n", pixel_width, pixel_height);
+
+    // for (size_t i = 0; i < 3e6; i++){
+    //     fputc(a.image[i], fp);
+    // }
+    
+    // (void) fclose(fp);
+
+    #define num_threads 1000
+	mandelbrot_arg targs[num_threads];
+	pthread_t tids[num_threads];
+
+	for (int i = 0; i < num_threads; i++) {
+
+		targs[i] = a;
+        targs[i].ystart = i;
+        targs[i].yend = i;
+
+		pthread_attr_t attr;
+		pthread_attr_init(&attr);
+
+		pthread_create(&tids[i], &attr, mandelbrot, &targs[i]);
+	}
+
+	// Wait for threads
+	for (size_t i = 0; i < num_threads; i++) {
+    // for (int i = num_threads-1; i >= 0 ; i -= 1 ){
+		pthread_join(tids[i], NULL);
+        // printf("time: %.3f ", get_time() - t1 );        
+	}
+
 
 
     // Open file and write header
@@ -140,38 +180,14 @@ int main(int argc, char** argv){
 	FILE *fp = fopen(filename, "wb"); /* b - binary mode */
 	(void) fprintf(fp, "P6\n%d %d\n255\n", pixel_width, pixel_height);
 
-    for (size_t i = 0; i < 3e6; i++)
-    {
+    for (size_t i = 0; i < 3*1000*1000; i++){
         fputc(a.image[i], fp);
     }
     
     (void) fclose(fp);
 
-
-    // int num_threads = 1000;
-	// mandelbrot_arg targs[num_threads];
-	// pthread_t tids[num_threads];
-
-	// for (int i = 0; i < num_threads; i++) {
-
-	// 	targs[i].arg = atoll(argv[i + 1]);
-	// 	pthread_attr_t attr;
-	// 	pthread_attr_init(&attr);
-
-	// 	pthread_create(&tids[i], &attr, thread_function, &targs[i]);
-	// }
-
-	// // Wait for threads
-	// for (size_t i = 0; i < num_threads; i++) {
-    // // for (int i = num_threads-1; i >= 0 ; i -= 1 ){
-	// 	pthread_join(tids[i], NULL);
-    //     printf("time: %.3f ", get_time() - t1 );
-    //     printf("thread %lu. factorial %llu is %llu\n", i, targs[i].arg, targs[i].res);
-        
-	// }
-
-
-
+    t2 = clock()/(double)CLOCKS_PER_SEC;
+    printf("time: %.3f\n", t2-t1);
 
 
 
