@@ -20,6 +20,9 @@
         "test": "c",
         "stdlib.h": "c",
         "a.h": "c",
-        "arena_allocator.h": "c"
+        "arena_allocator.h": "c",
+        "time.h": "c",
+        "inttypes.h": "c",
+        "cstdlib": "c"
     }
 }
