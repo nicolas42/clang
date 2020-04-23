@@ -6,7 +6,7 @@ static FILE* file;
 
 int file_exists(const char * filename){
     /* try to open file to read */
-    FILE *file;
+    // FILE *file;
     if (file = fopen(filename, "r")){
         fclose(file);
         return 1;
@@ -29,58 +29,73 @@ typedef struct primes_t {
     size_t allocated;
 } primes_t;
 
+void primes_maybe_grow(primes_t* a)
+{
+	if (a->length == a->allocated){
+		a->allocated *= 2;
+		a->data = realloc(a->data, a->allocated * sizeof(u64));
+        printf("OMG!!!\n");
+	}
+}
+
 int main(int argc, char** argv){
 
   if (signal(SIGINT, sig_handler) == SIG_ERR)
       printf("\ncan't catch SIGINT\n");
 
 
+    int timeout = 1000;
+
     // If primes files exist then get primes from it
     // otherwise just start with a 2 as the first prime
-    primes_t primes;
-    primes.data = malloc((int)1e6 * sizeof(u64));
-    primes.length = 0;
+    primes_t p;
+    p.allocated = 1e6;
+    p.data = malloc( p.allocated * sizeof(u64));
+    p.length = 0;
 
-    if (file_exists("primes")){
+    if (file_exists("p")){
         printf("woo");
-        string f = read_file("primes");
+        string f = read_file("p");
         strings s = split_destructive(f.data, "\n\r\t ");
 
         for (size_t i = 0; i < s.length; i++)
         {             
             printf("%s ", s.data[i]);       
             char* ptr;
-            primes.data[i] = strtoll(s.data[i], &ptr, 10);
-            primes.length += 1;
+            sscanf(s.data[i], "%llu", &p.data[i]); 
+            primes_maybe_grow(&p);
+            // p.data[i] = strtoll(s.data[i], &ptr, 10);
+            p.length += 1;
         }
         printf("\n");
 
     }
 
-    // printf("*last prime: %llu ", primes.data[primes.length-1]);
+    // printf("*last prime: %llu ", p.data[p.length-1]);
     
-    if (primes.length == 0){
-        primes.data[0] = 2;
-        primes.length = 1;
+    if (p.length == 0){
+        p.data[0] = 2;
+        p.length = 1;
     }
 
 	double t1 = get_time();
 
-	file = fopen("primes", "a");
+	file = fopen("p", "a");
 
     u64 is_prime = 0;
-    u64 a = primes.data[primes.length-1];
+    u64 a = p.data[p.length-1];
 	for ( ; ; a++){
 		is_prime = 1;
-		for ( u64 i = 0; i < primes.length; i++){
-			if ( a%primes.data[i] == 0){
+		for ( u64 i = 0; i < p.length; i++){
+			if ( a%p.data[i] == 0){
 				is_prime = 0;
 				break;
 			}
 		}
 		if (is_prime){
-			primes.data[primes.length++] = a;
-            fprintf(file, "%llu ", primes.data[primes.length-1]);
+			p.data[p.length++] = a;
+            primes_maybe_grow(&p);
+            fprintf(file, "%llu ", p.data[p.length-1]);
 
 			// printf("%d ", a);
 		}
@@ -88,16 +103,16 @@ int main(int argc, char** argv){
 
 		if (get_time()-t1 >= 1){
 			t1 = get_time();
-			printf("last prime: %llu\r\n", primes.data[primes.length-1]);
+			printf("last prime: %llu\r\n", p.data[p.length-1]);
 
-            // if (t1 > timeout){ break; }
+            if (t1 > timeout){ break; }
 		}
 	}
 
     fclose(file);
 
-	// for ( u64 i = 0; i < primes.length; i++){
-	// 	printf("%d ", primes.data[i]);
+	// for ( u64 i = 0; i < p.length; i++){
+	// 	printf("%d ", p.data[i]);
 	// }
 
 	return 0;
