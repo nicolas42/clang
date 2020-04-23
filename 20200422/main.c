@@ -6,8 +6,8 @@ clang -Weverything a.c arena_allocator.h types.h ; ./a.out
 #include <string.h>
 #include "types.h"
 #include "arena_allocator.h"
-
 #include "util.h"
+#include "multivector.h"
 
 typedef struct Book {
    char*  title;
@@ -65,10 +65,13 @@ int main( )
     print_book(books[1]);
 */
 
+
     // tokenize_demo();
     
-    demo_split_destructive();
-    
+    // demo_split_destructive();
+
+    mv_main();
+
    return 0;
 }
 
