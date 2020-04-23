@@ -16,30 +16,30 @@ typedef struct string {
 	char* data;
 } string;
 
+string string_make(size_t n);
+void string_free(string f);
+void string_maybe_grow(string* f);
+string string_copy(string a);
+
+string read_file(char *filename);
+
 typedef struct strings {
 	size_t length;
 	size_t allocated;
 	char** data;
 } strings;
 
-
-string string_make(size_t n);
-void string_free(string f);
-void string_maybe_grow(string* f);
-
-string read_file(char *filename);
-
 strings strings_init(void);
 strings strings_make(size_t length);
 void strings_free(strings f);
 void strings_maybe_grow(strings* f);
 void strings_add(strings* f, char* a);
-string string_copy(string a);
 
-// strings split_lines_destructive(char* str_arg);
+// strings string_split(char* a char* split_chars);
+strings split_destructive(char* a, char* split_chars);
 void demo_split_destructive(void);
 double min(double a, double b);
-strings split_destructive(char* a, char* split_chars);
+int split_main(int argc, char** argv);
 
 string string_make(size_t n)
 {
@@ -187,7 +187,7 @@ strings split_destructive(char* a, char* split_chars)
 	strings_add(&lines, &(a[0]));
 
 	size_t strlen_a = strlen(a);
-	printf("strlen(a) %lu\n", strlen(a));
+	// printf("strlen(a) %lu\n", strlen(a));
 
 	for (size_t i = 1; i < strlen_a; i++){
 
@@ -208,10 +208,9 @@ strings split_destructive(char* a, char* split_chars)
 }
 
 
-
 void demo_split_destructive(void)
 {
-	string f = read_file("tokenize.h");
+	string f = read_file("util.h");
 	strings tokens = split_destructive(f.data, "\n\r\t ");
 
 	for (size_t i = 0; i < min(10, tokens.length); i++){
@@ -219,6 +218,24 @@ void demo_split_destructive(void)
 	}
 }
 
+int split_main(int argc, char** argv)
+{
+	// ./a.out split "Halsdkjf asldfk jasfdkl askjfd kalsfkj" "\n"
+
+	if (argc != 4){
+		printf("usage: ./a.out split string-to-split chars-to-split-on\n");
+		return -1;
+	}
+
+	char* data = argv[2];
+	char* split_chars = argv[3];
+	strings tokens = split_destructive(data, split_chars);
+
+	for (size_t i = 0; i < min(10, tokens.length); i++){
+		printf("%s\n", tokens.data[i]);
+	}
+	return 0;
+}
 
 // typedef struct slice { int offset ; int length; } slice;
 

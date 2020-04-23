@@ -5,72 +5,30 @@ clang -Weverything a.c arena_allocator.h types.h ; ./a.out
 #include <stdio.h>
 #include <string.h>
 #include "types.h"
-#include "arena_allocator.h"
 #include "util.h"
 #include "multivector.h"
+#include "mandelbrot.h"
+#include "misc.h"
 
-typedef struct Book {
-   char*  title;
-   char*  author;
-   char*  subject;
-   u32    book_id;
-   u32    padding;
-} Book;
-
-void print_book(struct Book book);
-Book make_book(char* title, char* author, char* subject, u32 book_id);
-
-
-static const char* const book_format = "Book{ %s %s %s %d }\n";
-
-
-void print_book(struct Book book)
+int main(int argc, char** argv)
 {
-    printf( book_format, book.title, book.author, book.subject, book.book_id );
-}
+    // ./a.out split "alskdjfkslad kfjasklf ajfd" " "
+    // ./a.out multivector
+    // ./a.out mandelbrot
+    if ( argc < 2 ) { 
+        printf("usage: ./a.out something.  Look at the source\n");
+        return -1;
+    }
 
-Book make_book(char* title, char* author, char* subject, u32 book_id)
-{
-    Book b;
-    b.title = arena_allocate(100);
-    b.author = arena_allocate(100);
-    b.subject = arena_allocate(100);
-
-   strcpy( b.title, title);
-   strcpy( b.author, author); 
-   strcpy( b.subject, subject);
-    b.book_id = book_id;
-
-   return b;
-}
-
-
-
-int main( )
-{
-/*
-    arena_init();
-
-    Book books[100]; // book1, books[1];
-
-    books[0] = make_book("C Programming", "Nuha Ali", "C Programming Tutorial", 6495407);
-    books[1] = make_book("Telecom Billing", "Zara Ali", "Telecom Billing Tutorial", 6495700);
-
-    print_book(books[0]);
-    print_book(books[1]);
-
-    books[1] = books[0];
-
-    print_book(books[0]);
-    print_book(books[1]);
-*/
-
-
-    // tokenize_demo();
-    
-    // demo_split_destructive();
-
-    mv_main();
+    if ( strcmp(argv[1], "split") == 0 ){
+        split_main(argc, argv);
+    } else if ( strcmp(argv[1], "multivector") == 0 ){
+        mv_main();
+    } else if ( strcmp(argv[1], "mandelbrot") == 0 ){
+        mandelbrot_main(argc, argv);
+    } else if ( strcmp(argv[1], "count_ticks") == 0 ){
+        count_ticks_main();
+    }
 
    return 0;
 }

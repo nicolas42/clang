@@ -1,5 +1,2 @@
-cat $0
-clang *.h main.c -Weverything
-rm *.gch
-./a.out
+cat $0 ; clang *.h main.c -Wfatal-errors ; rm *.gch
 
