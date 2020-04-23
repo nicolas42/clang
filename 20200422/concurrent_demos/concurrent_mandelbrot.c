@@ -18,14 +18,16 @@ typedef struct {
     int yend;
 } mandelbrot_arg;
 
-int mandelbrot(mandelbrot_arg a);
+int mandelbrot(void* arg);
 void mandelbrot_usage(void);
 int mandelbrot_main(int argc, char** argv);
 
 
 
-int mandelbrot(mandelbrot_arg a)
+int mandelbrot( void* arg)
 {
+
+    mandelbrot_arg a = *(mandelbrot_arg*) arg;
 
     int pixel_width = a.pixel_width;
     int pixel_height = a.pixel_height;
@@ -122,8 +124,38 @@ int main(int argc, char** argv){
     a.ystart = 0;
     a.yend = pixel_height;
     
-    mandelbrot(a);
-    
+    // mandelbrot(a);
+
+
+
+
+
+	// thread_arg targs[nargs];
+	// pthread_t tids[nargs];
+
+	// for (int i = 0; i < nargs; i++) {
+
+	// 	targs[i].arg = atoll(argv[i + 1]);
+	// 	pthread_attr_t attr;
+	// 	pthread_attr_init(&attr);
+
+	// 	pthread_create(&tids[i], &attr, thread_function, &targs[i]);
+	// }
+
+	// // Wait for threads
+	// for (size_t i = 0; i < nargs; i++) {
+    // // for (int i = nargs-1; i >= 0 ; i -= 1 ){
+	// 	pthread_join(tids[i], NULL);
+    //     printf("time: %.3f ", get_time() - t1 );
+    //     printf("thread %lu. factorial %llu is %llu\n", i, targs[i].arg, targs[i].res);
+        
+	// }
+
+
+
+
+
+
     return 0;
 }
 
