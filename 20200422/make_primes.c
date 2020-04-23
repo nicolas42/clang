@@ -23,6 +23,12 @@ void sig_handler(int signo)
   }
 }
 
+typedef struct primes_t {
+    u64* data;
+    size_t length;
+    size_t allocated;
+} primes_t;
+
 int main(int argc, char** argv){
 
   if (signal(SIGINT, sig_handler) == SIG_ERR)
@@ -31,8 +37,9 @@ int main(int argc, char** argv){
 
     // If primes files exist then get primes from it
     // otherwise just start with a 2 as the first prime
-    u64* primes = malloc((int)1e7 * sizeof(u64)); // 80mb?
-    u64 primes_length = 0;
+    primes_t primes;
+    primes.data = malloc((int)1e6 * sizeof(u64));
+    primes.length = 0;
 
     if (file_exists("primes")){
         printf("woo");
@@ -43,18 +50,18 @@ int main(int argc, char** argv){
         {             
             printf("%s ", s.data[i]);       
             char* ptr;
-            primes[i] = strtoll(s.data[i], &ptr, 10);
-            primes_length += 1;
+            primes.data[i] = strtoll(s.data[i], &ptr, 10);
+            primes.length += 1;
         }
         printf("\n");
 
     }
 
-    // printf("*last prime: %llu ", primes[primes_length-1]);
+    // printf("*last prime: %llu ", primes.data[primes.length-1]);
     
-    if (primes_length == 0){
-        primes[0] = 2;
-        primes_length = 1;
+    if (primes.length == 0){
+        primes.data[0] = 2;
+        primes.length = 1;
     }
 
 	double t1 = get_time();
@@ -62,18 +69,18 @@ int main(int argc, char** argv){
 	file = fopen("primes", "a");
 
     u64 is_prime = 0;
-    u64 a = primes[primes_length-1];
+    u64 a = primes.data[primes.length-1];
 	for ( ; ; a++){
 		is_prime = 1;
-		for ( u64 i = 0; i < primes_length; i++){
-			if ( a%primes[i] == 0){
+		for ( u64 i = 0; i < primes.length; i++){
+			if ( a%primes.data[i] == 0){
 				is_prime = 0;
 				break;
 			}
 		}
 		if (is_prime){
-			primes[primes_length++] = a;
-            fprintf(file, "%llu ", primes[primes_length-1]);
+			primes.data[primes.length++] = a;
+            fprintf(file, "%llu ", primes.data[primes.length-1]);
 
 			// printf("%d ", a);
 		}
@@ -81,7 +88,7 @@ int main(int argc, char** argv){
 
 		if (get_time()-t1 >= 1){
 			t1 = get_time();
-			printf("last prime: %llu\r\n", primes[primes_length-1]);
+			printf("last prime: %llu\r\n", primes.data[primes.length-1]);
 
             // if (t1 > timeout){ break; }
 		}
@@ -89,8 +96,8 @@ int main(int argc, char** argv){
 
     fclose(file);
 
-	// for ( u64 i = 0; i < primes_length; i++){
-	// 	printf("%d ", primes[i]);
+	// for ( u64 i = 0; i < primes.length; i++){
+	// 	printf("%d ", primes.data[i]);
 	// }
 
 	return 0;
