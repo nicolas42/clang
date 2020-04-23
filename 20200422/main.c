@@ -25,7 +25,8 @@ int main(int argc, char** argv)
     } else if ( strcmp(argv[1], "multivector") == 0 ){
         mv_main();
     } else if ( strcmp(argv[1], "mandelbrot") == 0 ){
-        mandelbrot_main(argc, argv);
+        // mandelbrot_main(argc, argv);
+        mandelbrot_simple(1000,1000,0,0,4,4);
     }
 
    return 0;
