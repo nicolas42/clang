@@ -40,11 +40,14 @@ void primes_maybe_grow(primes_t* a)
 
 int main(int argc, char** argv){
 
+    // int timeout = 1000;
+
+    char* filename = "primes.dat";
+
+
   if (signal(SIGINT, sig_handler) == SIG_ERR)
       printf("\ncan't catch SIGINT\n");
 
-
-    int timeout = 1000;
 
     // If primes files exist then get primes from it
     // otherwise just start with a 2 as the first prime
@@ -53,9 +56,9 @@ int main(int argc, char** argv){
     p.data = malloc( p.allocated * sizeof(u64));
     p.length = 0;
 
-    if (file_exists("p")){
+    if (file_exists(filename)){
         printf("woo");
-        string f = read_file("p");
+        string f = read_file(filename);
         strings s = split_destructive(f.data, "\n\r\t ");
 
         for (size_t i = 0; i < s.length; i++)
@@ -80,7 +83,7 @@ int main(int argc, char** argv){
 
 	double t1 = get_time();
 
-	file = fopen("p", "a");
+	file = fopen(filename, "a");
 
     u64 is_prime = 0;
     u64 a = p.data[p.length-1];
@@ -105,7 +108,7 @@ int main(int argc, char** argv){
 			t1 = get_time();
 			printf("last prime: %llu\r\n", p.data[p.length-1]);
 
-            if (t1 > timeout){ break; }
+            // if (t1 > timeout){ break; }
 		}
 	}
 
