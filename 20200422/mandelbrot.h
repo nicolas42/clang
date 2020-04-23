@@ -27,6 +27,9 @@ void* mandelbrot(void* arg);
 void mandelbrot_usage(void);
 int mandelbrot_main(int argc, char** argv);
 
+#endif
+
+
 void* mandelbrot( void* arg)
 {
 
@@ -269,7 +272,3 @@ int mandelbrot_simple(int pixel_width, int pixel_height, double xcenter, \
   (void) fclose(fp);
   return 0;
 }
-
-#endif
-
-
