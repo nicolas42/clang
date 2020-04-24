@@ -1,10 +1,6 @@
 /*
 demo_vector
-
-make sure to cast the pointer before loading or storing values like this
-((T*)a.data)[i]
-
-clang -Weverything -Wno-cast-align vector_t.h a.c
+clang -Weverything -Wno-cast-align vector.h demo_vector.c ; ./a.out
 */
 #include "vector.h"
 
