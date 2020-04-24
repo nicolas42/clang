@@ -53,7 +53,7 @@ string string_make(size_t n)
 	string f;
 	f.length = 0;
 	f.allocated = n;
-	f.data = malloc(n);
+	f.data = (char*)malloc(n);
 	return f;
 }
 
@@ -62,7 +62,7 @@ string string_copy(string a)
 	string b;
 	b.length = a.length;
 	b.allocated = a.allocated;
-	b.data = malloc(b.allocated*sizeof(char*));
+	b.data = (char*)malloc(b.allocated*sizeof(char*));
 	strcpy(b.data, a.data);
 	return b;
 }
@@ -76,7 +76,7 @@ void string_maybe_grow(string* f)
 {
 	if (f->length == f->allocated){
 		f->allocated *= 2;
-		f->data = realloc(f->data, f->allocated);
+		f->data = (char*)realloc(f->data, f->allocated);
 	}
 }
 
@@ -116,7 +116,7 @@ strings strings_init(void)
 	strings f;
 	f.length = 0;
 	f.allocated = 1000;
-	f.data = malloc(1000*sizeof(char*));
+	f.data = (char**)malloc(1000*sizeof(char**));
 	return f;
 }
 
@@ -125,7 +125,7 @@ strings strings_make(size_t n)
 	strings f;
 	f.length = 0;
 	f.allocated = n;
-	f.data = malloc(n*sizeof(char*));
+	f.data = (char**)malloc(n*sizeof(char**));
 	return f;
 }
 
@@ -138,7 +138,7 @@ void strings_maybe_grow(strings* f)
 {
 	if (f->length == f->allocated){
 		f->allocated *= 2;
-		f->data = realloc(f->data, f->allocated*sizeof(char*));
+		f->data = (char**)realloc(f->data, f->allocated*sizeof(char**));
 		printf("GROW!!!\n");
 	}
 }
