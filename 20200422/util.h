@@ -42,8 +42,8 @@ void strings_free(strings f);
 void strings_maybe_grow(strings* f);
 void strings_add(strings* f, char* a);
 
-// strings string_split(char* a char* split_chars);
-strings split_destructive(char* a, char* split_chars);
+// strings string_split_destructive(char* a char* split_chars);
+strings string_split_destructive(char* a, char* split_chars);
 void demo_split_destructive(void);
 double min(double a, double b);
 int split_main(int argc, char** argv);
@@ -80,9 +80,8 @@ void string_maybe_grow(string* f)
 	}
 }
 
-string read_file(char *filename)
+string read_file (char *filename)
 {
-	#define error_size 200
 	string f = string_make(1000);
 
 	FILE *fp;
@@ -90,8 +89,8 @@ string read_file(char *filename)
 
 	fp = fopen(filename, "r");
 	if (fp == NULL) {
-		char err[error_size];
-		snprintf(err, error_size, "Error in opening file %s", filename);
+		char err[200];
+		snprintf(err, 200, "Error in opening file %s", filename);
 		perror(err);
 		return f;
 	}
@@ -110,7 +109,6 @@ string read_file(char *filename)
 	fclose(fp);
 
 	return f;
-	#undef error_size
 }
 
 strings strings_init(void)
@@ -187,7 +185,7 @@ double min(double a, double b)
 	return b;
 }
 
-strings split_destructive(char* a, char* split_chars)
+strings string_split_destructive(char* a, char* split_chars)
 {
 	strings lines = strings_make(10000);
 
@@ -218,7 +216,7 @@ strings split_destructive(char* a, char* split_chars)
 void demo_split_destructive(void)
 {
 	string f = read_file("util.h");
-	strings tokens = split_destructive(f.data, "\n\r\t ");
+	strings tokens = string_split_destructive(f.data, "\n\r\t ");
 
 	for (size_t i = 0; i < min(10, tokens.length); i++){
 		printf("{%s} ", tokens.data[i]);
@@ -236,7 +234,7 @@ int split_main(int argc, char** argv)
 
 	char* data = argv[2];
 	char* split_chars = argv[3];
-	strings tokens = split_destructive(data, split_chars);
+	strings tokens = string_split_destructive(data, split_chars);
 
 	for (size_t i = 0; i < min(10, tokens.length); i++){
 		printf("%s\n", tokens.data[i]);
