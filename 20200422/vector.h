@@ -1,5 +1,5 @@
 /*
-Generic resizeable vector_t.
+Generic resizeable vector.
 Compile with no-cast-align warnings
 
 clang -Weverything -Wno-cast-align
@@ -10,14 +10,14 @@ clang -Weverything -Wno-cast-align
 #include <stdlib.h>
 #include <time.h>
 
-typedef struct vector_t {
+typedef struct vector {
 	void* data;
 	size_t length;
 	size_t allocated;
     size_t size;
-} vector_t;
+} vector;
 
-#define T vector_t
+#define T vector
 
 T vector_make(size_t n, size_t s);
 void vector_free(T f);
