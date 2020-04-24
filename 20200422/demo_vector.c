@@ -38,3 +38,5 @@ int main(void)
 }
 
 #undef T
+#undef vector
+#undef vector_format
