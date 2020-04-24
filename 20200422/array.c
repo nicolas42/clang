@@ -6,6 +6,8 @@ To use it with arbitrarily data types
 Usage
 change the typedef to your type
 typedef test_struct T;
+
+
 #define array(i) ( *((T*)a.data + i) )
 
 
@@ -27,37 +29,6 @@ typedef struct array_t {
 array_t array_make(size_t n, size_t s);
 void array_free(array_t f);
 array_t maybe_grow(array_t f);
-int main(void);
-
-array_t array_make(size_t n, size_t s)
-{
-    // make sure alignment is good. 
-    // so an integer number of datas fits inside
-    while ( n % s != 0 ){ n += 1; }
-
-	array_t f;
-    f.size = s;
-	f.length = 0;
-	f.allocated = n;
-	f.data = malloc(n*s);
-	return f;
-}
-
-void array_free(array_t f)
-{
-	free(f.data);
-}
-
-array_t maybe_grow(array_t f)
-{
-	if (f.length == f.allocated){
-		f.allocated *= 2;
-		f.data = realloc(f.data, f.allocated * f.size);
-        puts("woohoo");
-	}
-    return f;
-}
-
 
 
 typedef struct test_struct {
@@ -97,4 +68,35 @@ int main(void)
 
     return 0;
 }
+
+
+array_t array_make(size_t n, size_t s)
+{
+    // make sure alignment is good. 
+    // so an integer number of datas fits inside
+    while ( n % s != 0 ){ n += 1; }
+
+	array_t f;
+    f.size = s;
+	f.length = 0;
+	f.allocated = n;
+	f.data = malloc(n*s);
+	return f;
+}
+
+void array_free(array_t f)
+{
+	free(f.data);
+}
+
+array_t maybe_grow(array_t f)
+{
+	if (f.length == f.allocated){
+		f.allocated *= 2;
+		f.data = realloc(f.data, f.allocated * f.size);
+        puts("woohoo");
+	}
+    return f;
+}
+
 
