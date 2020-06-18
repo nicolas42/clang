@@ -1,11 +1,11 @@
-#include "util.h"
+#include "basic.h"
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
 
 int main(void)
 {
-    string f = read_file("examples/demo_strtok.c");
+    string f = read_file("basic.h");
     char* s = f.data;
     char* pos;
 

@@ -17,7 +17,7 @@ arena_make arena_allocate arena_recycle arena_free arena arena_length arena_capa
 #include <math.h>
 #include <stdarg.h>
 // #include "short_type.h"
-#include "arena_allocator.h"
+// #include "arena_allocator.h"
 
 typedef double* multivector_t;
 static size_t multivector_length = 8;
