@@ -2,7 +2,7 @@
 #define MANDELBROT_H
 
 // Draw a black and white mandelbrot image in file mandelbrot.ppm
-// usage: mandelbrot(pixel_width, pixel_height, xcenter, ycenter, width, height);
+// usage: mandelbrot(w, h, xcenter, ycenter, width, height);
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,8 +11,9 @@
 
 typedef struct {
     char* image;
-    int pixel_width;
-    int pixel_height;
+    int w;
+    int h;
+    int c;
     double xcenter;
     double ycenter;
     double width;
@@ -28,8 +29,9 @@ void* mandelbrot( void* arg)
 
     mandelbrot_arg a = *(mandelbrot_arg*) arg;
 
-    int pixel_width = a.pixel_width;
-    int pixel_height = a.pixel_height;
+    int w = a.w;
+    int h = a.h;
+    int c = a.c;
     double xcenter = a.xcenter;
     double ycenter = a.ycenter;
     double width = a.width;
@@ -51,16 +53,16 @@ void* mandelbrot( void* arg)
     const unsigned char white[4] = {255, 255, 255, 255};
 
     // length per pixel
-    const double width_per_pixel = (xmax - xmin) / pixel_width;
-    const double height_per_pixel = (ymax - ymin) / pixel_height;
+    const double width_per_pixel = (xmax - xmin) / w;
+    const double height_per_pixel = (ymax - ymin) / h;
     
-    for (int y = 0; y < pixel_height ; y += 1) {
-        for (int x = 0; x < pixel_width; x += 1) {
+    for (int y = 0; y < h ; y += 1) {
+        for (int x = 0; x < w; x += 1) {
 
             double zx, zxtmp, zy, cx, cy;
             int is_in_set, stride, i, imax;
 
-            stride = 3;
+            // stride = 3;
             imax = 40;
 
             // image is flipped vertically
@@ -81,18 +83,18 @@ void* mandelbrot( void* arg)
             }
             
             if (is_in_set) {
-				a.image[y*pixel_width*3 + x*3 + 0] = (char)black[0];
-                a.image[y*pixel_width*3 + x*3 + 1] = (char)black[1];
-                a.image[y*pixel_width*3 + x*3 + 2] = (char)black[2];
+				a.image[y*w*c + x*c + 0] = (char)black[0];
+                a.image[y*w*c + x*c + 1] = (char)black[1];
+                a.image[y*w*c + x*c + 2] = (char)black[2];
 
 				// fputc(black[0], fp);
 				// fputc(black[1], fp);
 				// fputc(black[2], fp);
 				// printf("*");
             } else {
-				a.image[y*pixel_width*3 + x*3 + 0] = white[0] * i / imax;
-                a.image[y*pixel_width*3 + x*3 + 1] = white[1] * i / imax;
-                a.image[y*pixel_width*3 + x*3 + 2] = white[2] * i / imax;
+				a.image[y*w*c + x*c + 0] = white[0] * i / imax;
+                a.image[y*w*c + x*c + 1] = white[1] * i / imax;
+                a.image[y*w*c + x*c + 2] = white[2] * i / imax;
 
 				// fputc(white[0] * i / imax, fp);
 				// fputc(white[1] * i / imax, fp);
@@ -110,36 +112,30 @@ int main(int argc, char** argv){
     double t1, t2; 
     t1 = clock()/(double)CLOCKS_PER_SEC;
 
-    int pixel_width, pixel_height;
-    double xcenter, ycenter, width, height;
-
-    pixel_width = 1000; pixel_height = 1000;
-    xcenter = 0; ycenter = 0; width = 4; height = 4;
-
+    // Make Mandelbrot Image
     mandelbrot_arg a;
-
-    a.image = malloc(3*1000*1000 * sizeof(char));
-    a.pixel_width = pixel_width;
-    a.pixel_height = pixel_height;
-    a.xcenter = xcenter;
-    a.ycenter = ycenter;
-    a.width = width;
-    a.height = height;
-    
+    a.w = 1000;
+    a.h = 1000;
+    a.c = 3;
+    a.xcenter = 0;
+    a.ycenter = 0;
+    a.width = 4;
+    a.height = 4;
+    a.image = malloc(a.c * a.h * a.w * sizeof(char));
     mandelbrot(&a);
 
 
-    // Open file and write header
+    // Write File
 	char* filename = "mandelbrot.ppm";
 	FILE *fp = fopen(filename, "wb"); /* b - binary mode */
-	(void) fprintf(fp, "P6\n%d %d\n255\n", pixel_width, pixel_height);
-
-    for (size_t i = 0; i < 3*1000*1000; i++){
+	(void) fprintf(fp, "P6\n%d %d\n255\n", a.w, a.h);
+    for (size_t i = 0; i < a.c * a.h * a.w; i++){
         fputc(a.image[i], fp);
     }
-    
     (void) fclose(fp);
 
+
+    // Print Duration
     t2 = clock()/(double)CLOCKS_PER_SEC;
     printf("time: %.3f\n", t2-t1);
 

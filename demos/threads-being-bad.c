@@ -1,17 +1,10 @@
-// gcc lock_demo.c && ./a.out 1000
-// This script has a lot of threads modifying a single global
-// It can be configured to lock the modify using
-	// #define FUNCTION thread_proc
-	// #define FUNCTION add1_locked
+/*
+clang demos/threads.c  ; ./a.out
 
-// Demo
-// gcc lock_demo.c && ./a.out 1000
-// launches 1000 threads
+This demo shows how multiple threads modifying a single global will screw up computations
+change the number of threads and the number of iterations
 
-// You might have to try it multiple times to see that 
-// the result doesn't always equal the number of threads
-//
-
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -19,7 +12,7 @@
 #include <string.h>
 
 #define num_threads 3
-#define num_iterations 5000000
+#define num_iterations 5000
 
 static int result = 0;
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
