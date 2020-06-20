@@ -3,10 +3,10 @@ from ctypes import *
 lib = CDLL("python/mandelbrot.so", RTLD_GLOBAL)
 
 mandelbrot = lib.mandelbrot
-mandelbrot.argtypes = [c_int, c_int, c_double, c_double, c_double, c_double]
+mandelbrot.argtypes = [c_int, c_int, c_double, c_double, c_double, c_double, c_char_p]
 
 if __name__ == "__main__":
-    mandelbrot(1000,1000,0,0,4,4)
+    mandelbrot(400,400,0,0,4,4, c_char_p(b"out.ppm"))
 
 
 

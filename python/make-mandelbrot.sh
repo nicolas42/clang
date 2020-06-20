@@ -4,5 +4,5 @@ clang src/mandelbrot.c -o python/mandelbrot.so   \
 
 python python/mandelbrot.py
 
-open mandelbrot.ppm 
+open out.ppm
 
