@@ -1,7 +1,7 @@
 #include "mandelbrot.h"
 
 int mandelbrot(int pixel_width, int pixel_height, double xcenter, \
-    double ycenter, double width, double height)
+    double ycenter, double width, double height, char* filename)
 {
 
     // to see full image: mandelbrot(1000,1000,0,0,4,4);
@@ -24,7 +24,7 @@ int mandelbrot(int pixel_width, int pixel_height, double xcenter, \
     const double height_per_pixel = (ymax - ymin) / pixel_height;
     
     // Open file and write header
-	char* filename = "mandelbrot.ppm";
+	// char* filename = "mandelbrot.ppm";
 	FILE *fp = fopen(filename, "wb"); /* b - binary mode */
 	(void) fprintf(fp, "P6\n%d %d\n255\n", pixel_width, pixel_height);
 
@@ -118,7 +118,7 @@ int mandelbrot_main(int argc, char** argv){
 		return 1;
 	}
     // printf("\nargc: %d\n", argc);
-    mandelbrot(pixel_width, pixel_height, xcenter, ycenter, width, height);
+    mandelbrot(pixel_width, pixel_height, xcenter, ycenter, width, height, "out.ppm");
     
     return 0;
 }
