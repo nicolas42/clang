@@ -1,21 +1,26 @@
 src contains object files which are compiled to lib.a
 examples and demos contain main functions which use lib.a
 
-run demos like this
-
-1. make lib.a
+Make lib.a
 
 	make
 
-2. compile code which uses lib.a
+Compile other stuff
 
-	clang demos/demo-mandelbrot.c lib.a
+	clang demos/mandelbrot_main.c lib.a -Isrc
 
-3. run the thing, test it, and so on
+Run the thing, test it
 
 	./a.out
 	open mandelbrot.ppm
 
 
-Once lib.a is created it can be reused obviously, unless you change it.
+Once lib.a is created it can be reused obviously.
+
+All together now.
+
+        make \
+        clang demos/mandelbrot_main.c lib.a -Isrc \
+        ./a.out \
+        open mandelbrot.ppm 
 
