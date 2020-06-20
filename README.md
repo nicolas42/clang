@@ -19,8 +19,12 @@ Once lib.a is created it can be reused obviously.
 
 All together now.
 
-        make \
-        clang demos/mandelbrot_main.c lib.a -Isrc \
-        ./a.out \
-        open mandelbrot.ppm 
+run(){
+        make
+        clang $1 lib.a -Isrc
+        ./a.out
+}
+
+# run demos/mandelbrot_main.c
+# run a.c
 
