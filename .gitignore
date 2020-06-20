@@ -1,6 +1,10 @@
-a.out
-*.ppm
-*.a
-*.so
-*.dSYM
 
+*
+!*.c
+!*.cpp
+!*.h
+!*.hpp
+!*.py
+!*.md
+!*.sh
+!Makefile
